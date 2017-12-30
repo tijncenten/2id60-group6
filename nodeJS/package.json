@@ -1,0 +1,39 @@
+{
+  "name": "2id60-group6",
+  "version": "1.0.0",
+  "description": "The group assignment for the course 2ID60 Web Technology",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devBuild": "webpack --config webpack.dev.js",
+    "prodBuild": "webpack --config webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tijncenten/2id60-group6.git"
+  },
+  "author": "Group 6",
+  "license": "ISC",
+  "private": true,
+  "homepage": "https://github.com/tijncenten/2id60-group6#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-runtime": "^6.26.0",
+    "coreapi": "^0.1.1",
+    "mdi-react": "^2.1.19",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-md": "^1.2.9",
+    "react-router-dom": "^4.2.2",
+    "uglifyjs-webpack-plugin": "^1.1.5",
+    "webpack": "^3.10.0",
+    "webpack-merge": "^4.1.1"
+  }
+}

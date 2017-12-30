@@ -1,0 +1,11 @@
+{
+  name: "Development Build",
+  cmd: "npm run devBuild",
+  cwd: "{PROJECT_PATH}/nodeJS",
+  targets: {
+    "Production Build": {
+      cmd: "npm run prodBuild",
+      cwd: "{PROJECT_PATH}/nodeJS"
+    }
+  },
+}

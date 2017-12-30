@@ -1,0 +1,7 @@
+webtechvenv
+node_modules
+*.pyc
+__pycache__
+*.bundle.js
+*.bundle.js.map
+npm-debug.log
