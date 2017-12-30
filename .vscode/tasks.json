@@ -1,0 +1,25 @@
+
+
+{
+    "version": "0.1.0",
+    "command": "npm",
+    "isShellCommand": true,
+    "args": [],
+    "showOutput": "always",
+    "echoCommand": true,
+    "options": {
+        "cwd": "${workspaceFolder}/nodeJS"
+    },
+    "suppressTaskName": true,
+    "tasks": [
+        {
+            "isBuildCommand": true,
+            "taskName": "dev",
+            "args": ["run", "devBuild"]
+        },
+        {
+            "taskName": "prod",
+            "args": ["run", "prodBuild"]
+        }
+    ]
+}
