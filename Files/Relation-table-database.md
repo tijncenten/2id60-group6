@@ -1,0 +1,12 @@
+User(*user_id*, name, email)
+
+Profile(*profile_id*, *user_id*)
+Like(*like_id*, date, profile_id)
+P-Like(*like_id*, date, profile_id, post_id)
+P-Like(*like_id*, date, profile_id, comment_id)
+Comment(*comment_id*, profile_id, post_id, text)
+Post(*post_id*, profile_id(Created), text)
+SharedPost(*post_id*, profile_id(Created), profile_id(by))
+NewPost(*post_id*, profile_id(Created), profile_id(On))
+AlbumPost(*post_id*, album)
+MapPost(*post_id*, map)
