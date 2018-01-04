@@ -25,7 +25,7 @@ SECRET_KEY = 'kn-k95(*i$=3ls3mw*nlon)zeu4r#ul6#55e+edl_#x&@rk22!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -70,6 +70,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'webtechproject.wsgi.application'
+
+LOGIN_REDIRECT_URL = '/'
 
 
 # Database

@@ -18,7 +18,7 @@ def ws_connect(message, room_name):
     if b"username" in params:
         # Set the username in the session
         #message.channel_session["username"] = params[b"username"][0].decode("utf8")
-        message.channel_session["username"] = message.user.username.decode("utf8")
+        message.channel_session["username"] = message.user.username
         # Add the user to the room_name group
         Group("chat-%s" % room_name).add(message.reply_channel)
     else:
