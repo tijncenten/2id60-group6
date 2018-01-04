@@ -69,3 +69,9 @@ class AlbumPost(NewPost):
 class MapPost(NewPost):
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     lon = models.DecimalField(max_digits=9, decimal_places=6)
+
+class Message(models.Model):
+    fromProfile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='sentMessages')
+    toProfile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='receivedMessages')
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    message = models.TextField()

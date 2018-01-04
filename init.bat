@@ -11,8 +11,18 @@ call webtechvenv\Scripts\activate
 cd
 call pip install --upgrade pip
 call pip install -r requirements.txt
-call python manage.py runserver
-pause
+
+mkdir temp-redis
+cd temp-redis
+if not exist redis.msi (
+  powershell -Command "Invoke-WebRequest https://github.com/MicrosoftArchive/redis/releases/download/win-3.0.504/Redis-x64-3.0.504.msi -OutFile redis.msi"
+)
+
+msiexec /i redis.msi
+cd ..
+RMDIR /S /Q temp-redis
+
+call start run-server.bat
 exit
 
 :error
