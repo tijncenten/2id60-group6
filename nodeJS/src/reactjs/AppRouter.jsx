@@ -4,6 +4,7 @@ import { Button, Toolbar, NavigationDrawer } from 'react-md';
 import { withRouter } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import MainView from './views/MainView.jsx';
+import ChatView from './views/ChatView.jsx';
 import SettingsView from './views/SettingsView.jsx';
 import NavItemLink from './components/NavItemLink.jsx';
 import Aside from './components/Aside.jsx';
@@ -24,6 +25,12 @@ const navItems = [{
     exact: true,
     icon: 'person',
     component: MainView,
+  }, {
+    label: 'Chats',
+    to: `${TO_PREFIX}/chats`,
+    exact: true,
+    icon: 'chat',
+    component: ChatView,
   }, {
     label: 'Settings',
     to: `${TO_PREFIX}/settings`,
@@ -61,9 +68,6 @@ class AppRouter extends React.Component {
             <Route path={navItem.to} exact key={navItem.to} render={props => React.createElement(navItem.component, Object.assign({onSetTitle: this.setCurrentTitle}, ...props)) } />
           ))}
         </Switch>
-        <div className="md-toolbar-relative">
-
-        </div>
         <Button floating fixed secondary>share</Button>
       </NavigationDrawer>
     );
