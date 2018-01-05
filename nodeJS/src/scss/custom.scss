@@ -27,3 +27,14 @@
     margin-bottom:8px;
   }
 }
+
+.comment-input {
+  display:inline-block;
+  width: calc(100% - 48px);
+}
+
+@media screen and (min-width: 1025px) {
+  .comment-input {
+    width:calc(100% - 40px);
+  }
+}

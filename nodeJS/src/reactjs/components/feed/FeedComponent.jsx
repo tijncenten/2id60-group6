@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Button, Card, CardTitle, CardText, CardActions } from 'react-md';
+import CommentDialog from '../comments/CommentDialog.jsx';
 
 class FeedComponent extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class FeedComponent extends React.Component {
     });
   }
 
-  render() {
+  render() {  
     const { liked } = this.state;
     const { author, postDate, postText } = this.props;
     return (
@@ -39,8 +40,9 @@ class FeedComponent extends React.Component {
       </CardText>
         <CardActions>
           <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>plus_one</Button>
-          <Button icon primary>comment</Button>
+          <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
         </CardActions>
+        <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
       </Card>
     );
   }

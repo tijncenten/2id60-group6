@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Button, Card, CardTitle, CardText, TextField } from 'react-md';
 
-export default class PostCreate extends React.Component {
+class PostCreate extends React.Component {
 
   render() {
     return (
@@ -19,3 +19,5 @@ export default class PostCreate extends React.Component {
     );
   }
 }
+
+export default PostCreate
