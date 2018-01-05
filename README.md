@@ -7,7 +7,10 @@ A social media web app for the course Web Technology
 ## Setup
 
 After cloning the repository to your pc, setup the project by running the [init.bat](init.bat) file.
-Make sure that python and nodeJS are installed.
+Before running the init file, make sure that python and nodeJS are installed.
+Furthermore, for Django Channels, make sure that [visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools) is installed.
+
+When the redis installation starts, choose to include the PATH environment.
 
 ## Building
 
