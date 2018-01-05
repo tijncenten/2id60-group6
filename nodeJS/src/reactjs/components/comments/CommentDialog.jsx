@@ -1,5 +1,5 @@
 import React from 'react';
-import { DialogContainer } from 'react-md';
+import { DialogContainer, Button } from 'react-md';
 import CommentCreate from './CommentCreate.jsx'
 import CommentComponent from './CommentComponent.jsx'
 
@@ -29,9 +29,11 @@ class CommentDialog extends React.Component {
       <DialogContainer
         id="simple-list-dialog"
         visible={visible}
-        title="test title dialog"
+        title="Comment dialog"
         onHide={this.hide}
-        focusOnMount={false} >  
+        focusOnMount={false}
+        dialogClassName="comment-dialog" >  
+        <Button icon onClick={this.hide} className="dialog-close-button">close</Button>
         <CommentComponent />
         <CommentComponent />
         <CommentComponent />

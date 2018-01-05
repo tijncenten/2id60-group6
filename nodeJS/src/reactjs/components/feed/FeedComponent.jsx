@@ -39,7 +39,7 @@ class FeedComponent extends React.Component {
           )}
       </CardText>
         <CardActions>
-          <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>plus_one</Button>
+          <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>thumb_up</Button>
           <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
         </CardActions>
         <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
