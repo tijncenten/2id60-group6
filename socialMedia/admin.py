@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, PostLike, CommentLike, Comment, SharedPost, NewPost, AlbumPost, MapPost, Message
+from .models import Profile, PostLike, CommentLike, Comment, SharedPost, NewPost, AlbumPost, MapPost, ChatMessage
 
 # Register your models here.
 admin.site.register(Profile)
@@ -10,4 +10,4 @@ admin.site.register(SharedPost)
 admin.site.register(NewPost)
 admin.site.register(AlbumPost)
 admin.site.register(MapPost)
-admin.site.register(Message)
+admin.site.register(ChatMessage)
