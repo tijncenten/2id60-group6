@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 import MainView from './views/MainView.jsx';
 import ProfileView from './views/ProfileView.jsx';
 import ChatView from './views/ChatView.jsx';
+import NotificationView from './views/NotificationView.jsx';
 import SettingsView from './views/SettingsView.jsx';
 import NavItemLink from './components/NavItemLink.jsx';
 import Aside from './components/Aside.jsx';
@@ -32,6 +33,14 @@ const navItems = [{
     exact: true,
     icon: 'chat',
     component: ChatView,
+    badgeContent: 2,
+  }, {
+    label: 'Notifications',
+    to: `${TO_PREFIX}/notifications`,
+    exact: true,
+    icon: 'notifications',
+    component: NotificationView,
+    badgeContent: 4,
   }, {
     label: 'Settings',
     to: `${TO_PREFIX}/settings`,

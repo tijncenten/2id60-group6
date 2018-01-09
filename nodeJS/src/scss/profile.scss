@@ -57,6 +57,27 @@ $profile-margin-between-elements: 20px;
       }
     }
 
+    .profile-banner-friends {
+      display: block;
+      margin: 0 auto;
+      width: 200px;
+      
+      .md-avatar {
+        margin:5px;
+      }
+
+      .profile-banner-friends-button {
+        display:block;
+        width: auto;
+        text-align: center;
+      }
+
+      .profile-banner-number-of-friends {
+        font-size: 11px;
+        color: #c3c3c3;
+      }
+    }
+
     @media screen and (min-width: 600px) {
       .profile-banner-picture {
         display: inline-block;
@@ -77,6 +98,27 @@ $profile-margin-between-elements: 20px;
 
         .profile-banner-buttons {
           text-align: left;
+        }
+      }
+    }
+
+    @media screen and (min-width: 1210px) {
+      .profile-banner-friends {
+        display:inline-block;
+        
+        .md-avatar {
+          margin:5px;
+        }
+  
+        .profile-banner-friends-button {
+          display:block;
+          width: auto;
+          text-align: center;
+        }
+  
+        .profile-banner-number-of-friends {
+          font-size: 11px;
+          color: #c3c3c3;
         }
       }
     }

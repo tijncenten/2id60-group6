@@ -17,6 +17,15 @@ export default class ProfileBanner extends React.Component {
               <Button raised primary>Private message</Button>
             </CardActions>
           </div>
+          <div className="profile-banner-friends">
+            <Avatar src="static/images/ER-Diagram-Database.png"/>
+            <Avatar src="static/images/ER-Diagram-Database.png"/>
+            <Avatar src="static/images/ER-Diagram-Database.png"/>
+            <Avatar src="static/images/ER-Diagram-Database.png"/>
+            <CardActions className="profile-banner-friends-button">
+              <Button raised primary>friends <span className="profile-banner-number-of-friends">243</span></Button>
+            </CardActions>
+          </div>
         </div>
       </div>
     );
