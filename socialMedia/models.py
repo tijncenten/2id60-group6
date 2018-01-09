@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from model_utils.managers import InheritanceManager
 
 # Create your models here.
 class Profile(models.Model):
@@ -45,11 +46,13 @@ class Comment(models.Model):
         return 'Comment on Post ' + str(self.post.id) + ': ' + self.content
 
 class Post(models.Model):
-    profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='profilePost')
+    owner = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='profilePost')
     placedOnProfile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='placedPost')
     date = models.DateTimeField(auto_now_add=True)
     location = models.CharField(max_length=100)
     content = models.TextField()
+
+    objects = InheritanceManager()
 
 class SharedPost(Post):
     sharedPost = models.ForeignKey('NewPost', on_delete=models.CASCADE)
