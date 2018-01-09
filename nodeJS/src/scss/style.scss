@@ -5,6 +5,8 @@ $md-light-theme: true; // optional for light theme
 // $md-secondary-color: $md-deep-orange-a-200;
 
 $md-primary-color: $md-teal-500;
+$md-primary-color-light: $md-teal-300;
+$md-primary-color-light-light: $md-teal-100;
 $md-secondary-color: $md-deep-purple-a-200;
 
 @include react-md-everything;

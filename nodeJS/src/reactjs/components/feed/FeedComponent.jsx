@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Button, Card, CardTitle, CardText, CardActions } from 'react-md';
 import CommentDialog from '../comments/CommentDialog.jsx';
+import ShareDialog from './ShareDialog.jsx';
 
 class FeedComponent extends React.Component {
   constructor(props) {
@@ -38,11 +39,13 @@ class FeedComponent extends React.Component {
             this.props.children
           )}
       </CardText>
-        <CardActions>
-          <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>thumb_up</Button>
-          <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
-        </CardActions>
-        <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
+      <CardActions>
+        <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>thumb_up</Button>
+        <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
+        <Button icon primary onClick={this.shareDialog === undefined ? () => {} : this.shareDialog.show}>share</Button>
+      </CardActions>
+      <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
+      <ShareDialog ref={dialog => {this.shareDialog = dialog}}/>
       </Card>
     );
   }

@@ -1,0 +1,75 @@
+$comment-avatar-dimensions: 30px;
+
+.comment-input {
+  display:inline-block;
+  width: calc(100% - 48px);
+}
+
+@media screen and (min-width: 1025px) {
+  .comment-input {
+    width:calc(100% - 40px);
+  }
+}
+
+.comment-dialog {
+  width:600px !important;
+}
+
+.comment-avatar {
+  display:inline-block;
+  width: $comment-avatar-dimensions;
+  height: $comment-avatar-dimensions;
+  font-size: 16px !important;
+  vertical-align: top !important;
+}
+
+.comment-message {
+  float:none !important;
+  display:inline-block;
+  margin: 0px 0px 12px 8px !important;
+  vertical-align: top !important;
+  max-width: calc(100% - 8px - #{$comment-avatar-dimensions}) !important;
+  word-wrap: break-word;
+  background: rgb(249, 249, 249) !important;
+}
+
+.comment-info-wrapper{
+  float:right;
+}
+
+.comment-date {
+  float:left;
+  color: lightgray;
+  margin: 9px 6px 0px 6px;
+
+}
+
+.inline-block{
+  display:inline-block;
+}
+
+.number-of-likes{
+  float:right;
+  margin: 4px 6px 0px 3px;
+}
+
+.comment-like-button {
+  font-size:9px !important;
+  height:20px;
+  min-width: 63px;
+  padding: 5px 16px;
+}
+
+@media screen and (min-width: 1025px) {
+  .number-of-likes{
+    margin: 6px 6px 0px 3px;
+  }
+
+  .thumbs-up-icon{
+    margin-top:5px;
+  }
+
+  .comment-like-button {
+    margin-bottom: 4px;
+  }
+}
