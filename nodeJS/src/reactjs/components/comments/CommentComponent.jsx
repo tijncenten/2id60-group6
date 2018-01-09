@@ -16,7 +16,7 @@ class CommentComponent extends React.Component {
               5-1-2018 17:16
             </div>
             <div className="inline-block">
-              <FontIcon primary>thumb_up</FontIcon>
+              <FontIcon primary className="thumbs-up-icon">thumb_up</FontIcon>
               <div className="number-of-likes">
                 7    
               </div>      

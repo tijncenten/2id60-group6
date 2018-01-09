@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Toolbar, NavigationDrawer } from 'react-md';
+import { Button, Toolbar, NavigationDrawer, TextField } from 'react-md';
 import { withRouter } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import MainView from './views/MainView.jsx';
+import ProfileView from './views/ProfileView.jsx';
 import ChatView from './views/ChatView.jsx';
 import SettingsView from './views/SettingsView.jsx';
 import NavItemLink from './components/NavItemLink.jsx';
@@ -24,7 +25,7 @@ const navItems = [{
     to: `${TO_PREFIX}/my-profile`,
     exact: true,
     icon: 'person',
-    component: MainView,
+    component: ProfileView,
   }, {
     label: 'Chats',
     to: `${TO_PREFIX}/chats`,
@@ -62,6 +63,7 @@ class AppRouter extends React.Component {
       <NavigationDrawer
         drawerTitle="Menu"
         toolbarTitle={toolbarTitle}
+        toolbarActions={<TextField placeholder="search" id="testing"/>}
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
           {navItems.map(navItem => (
