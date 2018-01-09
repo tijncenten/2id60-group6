@@ -7,3 +7,5 @@ __pycache__
 *.bundle.css
 *.bundle.css.map
 npm-debug.log
+dump.rdb
+db.sqlite3
