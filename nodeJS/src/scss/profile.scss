@@ -33,6 +33,10 @@ $profile-margin-between-elements: 20px;
       max-width:500px;
       display: inline-block;
 
+      a {
+        text-decoration: none;
+      }
+
       .md-card-title {
         padding-bottom: 0;
 
