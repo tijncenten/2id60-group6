@@ -9,52 +9,72 @@ class FeedComponent extends React.Component {
     super(props);
 
     this.state = {
-      liked: props.liked
+      liked: props.liked,
+      likes: props.likes
     }
 
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
   handleLikeToggle() {
+
+    if (this.state.liked) {
+
+      // Substract a like
+      this.state.likes -= 1;
+      // TODO send to backend
+
+    } else {
+
+      // Add a like
+      this.state.likes += 1;
+      // TODO: send to backend
+
+    }
+
     this.setState({
       liked: !this.state.liked
     });
   }
 
-  render() {  
-    const { liked } = this.state;
-    const { author, postDate, postText } = this.props;
+  render() {
+    const { liked, likes } = this.state;
+    const { username, date, message } = this.props;
+
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
-          title={author.name}
-          subtitle={postDate}
-          avatar={<Avatar random>{author.initials}</Avatar>}>
+          title={username}
+          subtitle={date}
+          avatar={<Avatar random>{username.substring(0,2)}</Avatar>}>
         </CardTitle>
         <CardText>
-          {(postText !== null || postText !== "") && (
-            <p>{postText}</p>
+          {(message !== null || message !== "") && (
+            <p>{message}</p>
           )}
           {this.props.children !== null && (
             this.props.children
           )}
-      </CardText>
-      <CardActions>
-        <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>thumb_up</Button>
-        <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
-        <Button icon primary onClick={this.shareDialog === undefined ? () => {} : this.shareDialog.show}>share</Button>
-      </CardActions>
-      <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
-      <ShareDialog ref={dialog => {this.shareDialog = dialog}}/>
+        </CardText>
+        <CardActions>
+          <Button icon secondary swapTheming={liked} onClick={this.handleLikeToggle}>thumb_up</Button>
+          <div className="number-of-likes">
+            {likes > 0 ? likes : ""}
+          </div>
+          <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
+          <Button icon primary onClick={this.shareDialog === undefined ? () => {} : this.shareDialog.show}>share</Button>
+        </CardActions>
+        <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
+        <ShareDialog ref={dialog => {this.shareDialog = dialog}}/>
       </Card>
     );
   }
 }
 
 FeedComponent.propTypes = {
-  author: PropTypes.object.isRequired,
-  postDate: PropTypes.string.isRequired,
-  postText: PropTypes.string,
+  username: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  message: PropTypes.string,
   liked: PropTypes.bool.isRequired,
 }
 
