@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 import MainView from './views/MainView.jsx';
 import ProfileView from './views/ProfileView.jsx';
 import ChatView from './views/ChatView.jsx';
+import NotificationView from './views/NotificationView.jsx';
 import SettingsView from './views/SettingsView.jsx';
 import NavItemLink from './components/NavItemLink.jsx';
 import Aside from './components/Aside.jsx';
@@ -22,8 +23,8 @@ const navItems = [{
     component: MainView
   }, {
     label: 'My profile',
-    to: `${TO_PREFIX}/my-profile`,
-    exact: true,
+    to: `${TO_PREFIX}/profile/julian`,
+    exact: false,
     icon: 'person',
     component: ProfileView,
   }, {
@@ -32,6 +33,14 @@ const navItems = [{
     exact: true,
     icon: 'chat',
     component: ChatView,
+    badgeContent: 2,
+  }, {
+    label: 'Notifications',
+    to: `${TO_PREFIX}/notifications`,
+    exact: true,
+    icon: 'notifications',
+    component: NotificationView,
+    badgeContent: 4,
   }, {
     label: 'Settings',
     to: `${TO_PREFIX}/settings`,
@@ -67,10 +76,9 @@ class AppRouter extends React.Component {
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
           {navItems.map(navItem => (
-            <Route path={navItem.to} exact key={navItem.to} render={props => React.createElement(navItem.component, Object.assign({onSetTitle: this.setCurrentTitle}, ...props)) } />
+            <Route path={navItem.to} exact={navItem.exact} key={navItem.to} render={props => React.createElement(navItem.component, Object.assign({onSetTitle: this.setCurrentTitle}, ...props)) } />
           ))}
         </Switch>
-        <Button floating fixed secondary>share</Button>
       </NavigationDrawer>
     );
   }

@@ -8,15 +8,23 @@ class PostCreate extends React.Component {
       <Card className="md-block-centered post-create">
         <CardText>
           <Avatar className="post-avatar" random>AB</Avatar>
-          <TextField
-            id="post-input"
-            rows={1}
-            placeholder="Write something funny"
-            className="post-input" />
-          <Button className="post-send" icon primary>send</Button>
+          <form className="post-form" onSubmit={this.handleSubmit.bind(this)}>
+            <TextField
+              id="post-input"
+              rows={1}
+              placeholder="Write something funny"
+              className="post-input"
+              ref={(input) => this.message = input} />
+            <Button className="post-send" type="submit" icon primary>send</Button>
+          </form>
         </CardText>
       </Card>
     );
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.createPost(this.message.value);
   }
 }
 

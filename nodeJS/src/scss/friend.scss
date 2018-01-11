@@ -1,0 +1,41 @@
+.friend-list-body {
+  max-width:900px;
+  margin:0 auto;
+  padding-top:16px;
+  display:flex;
+  flex-wrap: wrap;
+
+  .empty-div {
+    height: 0;
+    margin: 0;
+  }
+
+  .friend-list-component {
+    margin: 0 4px;
+    margin-bottom: 8px;
+    flex: 1 1 400px;
+
+    .friend-list-avatar {
+      width: 100px;
+      height: 100px;
+      margin: 10px;
+      display: inline-block;
+    }
+
+    .friend-text {
+      display: inline-block;
+      transform: translateY(-50%);
+      vertical-align: top;
+      margin-top: 60px;
+
+      span {
+        display:block;
+      }
+    }
+
+    .friend-list-delete-button {
+      float:right;
+      margin: 10px;
+    }
+  }
+}

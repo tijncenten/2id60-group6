@@ -2,26 +2,59 @@ import React from 'react';
 import { Paper, Avatar, Button, FontIcon } from 'react-md';
 
 class CommentComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      liked: props.liked,
+      likes: props.likes
+    }
+
+    this.handleLikeToggle = this.handleLikeToggle.bind(this);
+  }
+
+  handleLikeToggle() {
+
+    if (this.state.liked) {
+
+      // Substract a like
+      this.state.likes -= 1;
+      // TODO send to backend
+
+    } else {
+
+      // Add a like
+      this.state.likes += 1;
+      // TODO: send to backend
+
+    }
+
+    // Toggle icon
+    this.setState({
+      liked: !this.state.liked
+    });
+  }
+
   render() {
     return (
       <div>
-        <Avatar random className="comment-avatar">JD</Avatar>
+        <Avatar random className="comment-avatar">{this.props.username.substring(0,2)}</Avatar>
         <div className="md-paper md-paper--1 chat-message comment-message">
           <div>
-            <strong>John</strong> test ingl al asas dfffffff ffffffffffff ffffff ffffa sdfa sdfa sdf
-            testinglalasasdfffffffffffffffffffffffffffffasdfasdfasdf
+            <strong>{this.props.username}  </strong>
+            {this.props.message}
           </div>
-          <div className="comment-info-wrapper">
+          <div className="comment-info-wrapper d-flex">
             <div className="comment-date">
-              5-1-2018 17:16
+              {this.props.date}
             </div>
             <div className="inline-block">
-              <FontIcon primary className="thumbs-up-icon">thumb_up</FontIcon>
+              <Button icon secondary swapTheming={this.state.liked} onClick={this.handleLikeToggle}>thumb_up</Button>
               <div className="number-of-likes">
-                7    
-              </div>      
+                {this.state.likes > 0 ? this.state.likes : ""}
+              </div>
             </div>
-            <Button flat primary className="comment-like-button">like</Button>
           </div>
         </div>
       </div>
