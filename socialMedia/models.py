@@ -5,9 +5,44 @@ from model_utils.managers import InheritanceManager
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='profile')
+    friends = models.ManyToManyField('self', through='Friendship', symmetrical=False, related_name='friends+')
 
     def __str__(self):
         return self.user.username
+
+    def add_friend(self, friend, symm=True):
+        friendship, created = Friendship.objects.get_or_create(profile=self, friend=friend)
+        if symm:
+            friend.add_friend(self, False)
+        return friendship
+
+    def remove_friend(self, friend, symm=True):
+        Friendship.objects.filter(profile=self, friend=friend).delete()
+        if symm:
+            friend.remove_friend(self, False)
+
+    def get_friends(self):
+        return Friendship.objects.filter(profile=self)
+        # return self.friends.filter(friendSet__profile=self)
+
+class FriendRequest(models.Model):
+    sender = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendRequestsSent')
+    receiver = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendRequestsReceived')
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('sender', 'receiver',)
+
+    def __str__(self):
+        return 'Friend request from ' + str(self.sender) + ' to ' + str(self.receiver)
+
+class Friendship(models.Model):
+    profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendshipCreatorSet')
+    friend = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendSet')
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('profile', 'friend',)
 
 class Like(models.Model):
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
