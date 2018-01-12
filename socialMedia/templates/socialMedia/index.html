@@ -19,8 +19,12 @@
 </head>
 
 <body>
+  <!-- Declare variables for data to be retreived from Django here -->
+  <script>
+    var activeUser = { id: {{user.pk}}, name: "{{user}}" };
+    var csrf_token= '{{ csrf_token }}';
+  </script>
   <div id="app">
-
   </div>
 
   <script src="{% static 'js/app.bundle.js' %}"></script>

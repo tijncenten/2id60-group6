@@ -86,7 +86,7 @@ class FeedComponent extends React.Component {
 }
 
 FeedComponent.propTypes = {
-  username: PropTypes.string.isRequired,
+  user: PropTypes.number.isRequired,
   date: PropTypes.string.isRequired,
   message: PropTypes.string,
   liked: PropTypes.bool.isRequired,

@@ -19,6 +19,7 @@ export default class Feed extends React.Component {
     }
 
     this.downloadPosts();
+    this.uploadPost = this.uploadPost.bind(this);
 
   }
 
@@ -28,9 +29,11 @@ export default class Feed extends React.Component {
     var d = new Date();
     var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
 
-    const newPost = { id: this.state.posts.length, username: "Anon", message, date, likes: 0 }
+    // TODO: find a viable id
+    const newPost = { id: 0, user: activeUser.id, message, date, likes: 0 }
     this.setState({ posts: [newPost].concat(this.state.posts)});
-    console.log(this.state.posts);
+
+    this.uploadPost(message);
   }
 
   downloadPosts() {
@@ -51,6 +54,19 @@ export default class Feed extends React.Component {
           )
         })
       }
+    });
+  }
+
+  uploadPost(message) {
+
+    jQuery.ajax({
+      method: 'POST',
+      url: '/api/posts/new',
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+        placedOnProfile: activeUser.id,
+        location: 'earth',
+        content: message}
     });
   }
 
