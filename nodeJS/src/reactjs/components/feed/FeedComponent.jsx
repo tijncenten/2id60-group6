@@ -10,10 +10,24 @@ class FeedComponent extends React.Component {
 
     this.state = {
       liked: props.liked,
-      likes: props.likes
+      likes: props.likes,
+      user: props.user,
+      username: 'John Doe'
     }
 
+    this.getUsername();
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
+  }
+
+  getUsername(){
+    // Retreive username via api
+    jQuery.ajax({
+      method: 'GET',
+      url: ('/api/profiles/' + this.props.user.toString()),
+      success: (user) => {
+          this.setState({ username: user.username });
+      }
+    });
   }
 
   handleLikeToggle() {
@@ -38,8 +52,8 @@ class FeedComponent extends React.Component {
   }
 
   render() {
-    const { liked, likes } = this.state;
-    const { username, date, message } = this.props;
+    const { liked, likes, username } = this.state;
+    const { date, message } = this.props;
 
     return (
       <Card className="md-block-centered feed-component">
@@ -72,7 +86,7 @@ class FeedComponent extends React.Component {
 }
 
 FeedComponent.propTypes = {
-  username: PropTypes.string.isRequired,
+  user: PropTypes.number.isRequired,
   date: PropTypes.string.isRequired,
   message: PropTypes.string,
   liked: PropTypes.bool.isRequired,

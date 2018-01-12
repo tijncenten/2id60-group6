@@ -5,13 +5,17 @@
     margin-right:16px;
   }
 
-  .post-input {
-    width:calc(100% - 104px);
-    display:inline-block;
+  .post-form {
+    display: inline;
+
+    .post-input {
+      width:calc(100% - 104px);
+      display:inline-block;
+    }
   }
 
   @media screen and (min-width: 1025px) {
-    .post-input {
+    .post-form .post-input {
       width:calc(100% - 96px);
     }
   }
