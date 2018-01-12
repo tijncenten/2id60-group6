@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import Http404
+from django.core import exceptions
+from django.db.models import Q
+from django.http import Http404, HttpResponse
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, AuthenticationFailed
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework import status, generics, permissions, serializers
@@ -67,7 +69,9 @@ class FriendsList(generics.ListAPIView):
 
     def get_queryset(self):
         pId = self.kwargs['pk']
-        if pId == 'me' and self.request.user.is_authenticated():
+        if pId == 'me':
+            if not self.request.user.is_authenticated():
+                raise AuthenticationFailed()
             pId = Profile.objects.get(user=self.request.user).id
         profile = Profile.objects.get(id=pId)
         friends = profile.get_friends()
@@ -80,7 +84,9 @@ class FriendsDetail(generics.RetrieveAPIView):
 
     def get_queryset(self):
         pId = self.kwargs['pk']
-        if pId == 'me' and self.request.user.is_authenticated():
+        if pId == 'me':
+            if not self.request.user.is_authenticated():
+                raise AuthenticationFailed()
             pId = Profile.objects.get(user=self.request.user).id
         profile = Profile.objects.get(id=pId)
         return profile.get_friends()
@@ -95,7 +101,7 @@ class FriendsDetail(generics.RetrieveAPIView):
 
     def delete(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            raise AuthenticationFailed()
         me = request.user.profile
         friend = Profile.objects.get(id=kwargs['fk'])
         me.remove_friend(friend)
@@ -106,8 +112,6 @@ class FriendRequestList(generics.ListCreateAPIView):
     serializer_class = FriendRequestSerializer
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return FriendRequest.objects.filter(receiver=self.request.user.profile)
 
     def perform_create(self, serializer):
@@ -128,8 +132,6 @@ class FriendRequestDetail(generics.RetrieveDestroyAPIView):
     lookup_url_kwarg = 'fk'
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return FriendRequest.objects.filter(receiver=self.request.user.profile)
 
 class FriendRequestAccept(generics.RetrieveAPIView):
@@ -155,9 +157,8 @@ class PostSubClassFieldsMixin(object):
 class PostList(PostSubClassFieldsMixin, generics.ListAPIView):
     serializer_class = PostSerializer
 
+# View for posts placed on a specific profile
 class ProfilePostList(PostList):
-    serializer_class = PostSerializer
-
     def get_queryset(self):
         pId = self.kwargs['pk']
         if pId == 'me':
@@ -172,6 +173,16 @@ class ProfilePostList(PostList):
                 raise Http404()
         queryset = super(ProfilePostList, self).get_queryset()
         return queryset.filter(placedOnProfile=profile)
+
+# View for the feed on the 'home' page
+class FeedList(PostList):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            raise exceptions.PermissionDenied
+        profile = self.request.user.profile
+        friends = profile.friends.all()
+        queryset = super(FeedList, self).get_queryset()
+        return queryset.filter(Q(placedOnProfile=profile) | Q(owner=profile) | Q(owner__in=friends)).order_by('-date')
 
 class PostCreate(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

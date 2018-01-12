@@ -15,6 +15,7 @@ apipatterns = [
     url(r'^profiles/(?P<pk>[0-9]+|me)/friends/requests/(?P<fk>[0-9]+)/?$', views.FriendRequestDetail.as_view()),
     url(r'^profiles/(?P<pk>[0-9]+|me)/friends/requests/(?P<fk>[0-9]+)/accept/?$', views.FriendRequestAccept.as_view()),
     url(r'^profiles/(?P<pk>[0-9]+|me)/posts/?$', views.ProfilePostList.as_view()),
+    url(r'^feed/?$', views.FeedList.as_view()),
     url(r'^posts/?$', views.PostList.as_view()),
     url(r'^posts/new/?$', views.PostCreate.as_view()),
     url(r'^posts/(?P<pk>[0-9]+)/?$', views.PostDetail.as_view()),
