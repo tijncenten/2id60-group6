@@ -12,6 +12,7 @@ export default class DeleteFriendDialog extends React.Component {
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   show(name){
@@ -25,11 +26,16 @@ export default class DeleteFriendDialog extends React.Component {
     this.setState({ visible: false });
   }
 
+  delete() {
+    this.hide()
+    this.props.deleteFriend(this.props.id);
+  }
+
   render() {
     const { visible } = this.state;
 
     const actions = [{
-      onClick: this.hide,
+      onClick: this.delete,
       primary: true,
       children: 'Yes, delete friend',
     }, {
