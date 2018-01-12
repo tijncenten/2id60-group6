@@ -1,7 +1,7 @@
 var coreapi = window.coreapi;  // Loaded by `coreapi.js`
 var schema = window.schema;    // Loaded by `schema.js`
 
-export default apiHandler = new class {
+export default new class {
   constructor() {
     let auth = new coreapi.auth.SessionAuthentication({
       csrfCookieName: 'csrftoken',

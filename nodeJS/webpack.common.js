@@ -8,7 +8,7 @@ var extractPlugin = new ExtractTextPlugin('../css/[name].bundle.css', {
 
 module.exports = {
   entry: {
-    app: ['babel-polyfill', './src/js/api-handler.js', './src/js/chat.js', './src/reactjs/App.jsx']
+    app: ['babel-polyfill', './src/js/apiHandler.js', './src/js/chat.js', './src/reactjs/App.jsx']
   },
   output: {
     path: path.resolve(__dirname, '..', 'socialMedia', 'static', 'js'),
