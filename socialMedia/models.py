@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 class Profile(models.Model):
@@ -24,6 +26,12 @@ class Profile(models.Model):
     def get_friends(self):
         return Friendship.objects.filter(profile=self)
         # return self.friends.filter(friendSet__profile=self)
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
 
 class FriendRequest(models.Model):
     sender = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendRequestsSent')

@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,12 +11,26 @@ from rest_framework import status, generics, permissions, serializers
 from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
 from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost
 from .serializers import ProfileSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, SharedPostSerializer
+from .forms import SignUpForm
 
 # Create your views here.
 class indexView(LoginRequiredMixin, TemplateView):
     template_name = 'socialMedia/index.html'
     login_url = '/login'
 
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect(to='/')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 # API views

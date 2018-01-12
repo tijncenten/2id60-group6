@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^settings$', views.indexView.as_view(), name='index'),
     url(r'^login/?$', auth_views.login, name='login'),
     url(r'^logout/?$', auth_views.logout, {'next_page': '/'}, name='logout'),
+    url(r'^signup/?$', views.signup, name='signup'),
     url(r'^api/', include(apipatterns)),
 ]
