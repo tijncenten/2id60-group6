@@ -15,17 +15,10 @@ export default class Feed extends React.Component {
     super(props);
 
     this.state = {
-      posts: [
-        { id: 0,  username: 'John', message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          date: '3-1-2018', likes: 0},
-        { id: 1, username: 'Jane', message: 'Der nachste freund hat keine schwester.',
-          date: '5-1-2018', likes: 3},
-        { id: 2, username: 'Richard', message: 'I follow the moskva, down to gorky park, listening to the wind of change',
-          date: '6-1-2018', likes: 21},
-        { id: 3, username: 'Svetlana', message: 'Unconquered city on vltlavas shore is protected by its people',
-          date: '6-1-2018', likes: 4}
-      ]
+      posts: []
     }
+
+    this.downloadPosts();
 
   }
 
@@ -40,11 +33,33 @@ export default class Feed extends React.Component {
     console.log(this.state.posts);
   }
 
+  downloadPosts() {
+    // Get basic post information
+    jQuery.ajax({
+      method: 'GET',
+      url: '/api/posts',
+      success: (posts) => {
+
+        this.setState({posts:
+          posts.map( post => ({
+              id: post.id,
+              user: post.owner,
+              message: post.content,
+              date: post.date,
+              likes: 0,
+            })
+          )
+        })
+      }
+    });
+  }
+
   loadPosts() {
+
     return this.state.posts.map( post =>
       <FeedComponent
         key = {post.id}
-        username = {post.username}
+        user = {post.user}
         message = {post.message}
         date = {post.date}
         likes = {post.likes}
