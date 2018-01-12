@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +11,7 @@ from rest_framework.reverse import reverse
 from rest_framework import status, generics, permissions, serializers
 from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
 from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost
-from .serializers import ProfileSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, SharedPostSerializer
+from .serializers import ProfileSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer
 from .forms import SignUpForm
 
 # Create your views here.
@@ -154,13 +155,32 @@ class PostSubClassFieldsMixin(object):
 class PostList(PostSubClassFieldsMixin, generics.ListAPIView):
     serializer_class = PostSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user.profile)
+class ProfilePostList(PostList):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        pId = self.kwargs['pk']
+        if pId == 'me':
+            if self.request.user.is_authenticated():
+                profile = self.request.user.profile
+            else:
+                raise exceptions.PermissionDenied
+        else:
+            try:
+                profile = Profile.objects.get(id=pId)
+            except:
+                raise Http404()
+        queryset = super(ProfilePostList, self).get_queryset()
+        return queryset.filter(placedOnProfile=profile)
 
 class PostCreate(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = NewPost.objects.all()
-    serializer_class = NewPostSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return NewPostCreateSerializer
+        return NewPostSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user.profile)

@@ -72,24 +72,26 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()
-    owner = serializers.ReadOnlyField(source='owner.id')
-    placedOnProfile = serializers.ReadOnlyField(source='placedOnProfile.id')
+    # owner = serializers.ReadOnlyField(source='owner.id')
+    # placedOnProfile = serializers.ReadOnlyField(source='placedOnProfile.id')
+    owner = ProfileSerializer(read_only=True)
+    placedOnProfile = ProfileSerializer(read_only=True)
 
     def get_postType(self, obj):
         return 'post'
 
     def to_representation(self, instance):
         if isinstance(instance, SharedPost):
-            return SharedPostSerializer(instance=instance).data
+            return SharedPostSerializer(instance=instance, context=self.context).data
         elif isinstance(instance, NewPost):
-            return NewPostSerializer(instance=instance).data
+            return NewPostSerializer(instance=instance, context=self.context).data
         return super(PostSerializer, self).to_representation(instance)
 
     class Meta:
         model = Post
         fields = '__all__'
 
-class NewPostSerializer(serializers.ModelSerializer):
+class NewPostCreateSerializer(serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()
 
     owner = serializers.ReadOnlyField(source='owner.id')
@@ -102,11 +104,28 @@ class NewPostSerializer(serializers.ModelSerializer):
         model = NewPost
         fields = '__all__'
 
-class SharedPostSerializer(serializers.ModelSerializer):
+# MIXIN
+class PostSubClassProfilesMixin(serializers.Serializer):
+    owner = serializers.SerializerMethodField()
+    placedOnProfile = serializers.SerializerMethodField()
+
+    def get_owner(self, obj):
+        if self.context['request'].user.is_authenticated():
+            if obj.owner == self.context['request'].user.profile:
+                return 'self'
+        return ProfileSerializer(obj.owner, read_only=True, context=self.context).data
+
+    def get_placedOnProfile(self, obj):
+        if obj.owner == obj.placedOnProfile:
+            return 'owner'
+        return ProfileSerializer(obj.placedOnProfile, read_only=True, context=self.context).data
+
+class NewPostSerializer(NewPostCreateSerializer, PostSubClassProfilesMixin):
+    pass
+
+class SharedPostSerializer(PostSubClassProfilesMixin, serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()
 
-    owner = serializers.ReadOnlyField(source='owner.id')
-    placedOnProfile = serializers.ReadOnlyField(source='placedOnProfile.id')
     sharedPost = NewPostSerializer(read_only=True)
 
 
@@ -115,4 +134,4 @@ class SharedPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SharedPost
-        fields = '__all__'
+        fields = ('id', 'postType', 'owner', 'placedOnProfile', 'date', 'location', 'content', 'sharedPost',)
