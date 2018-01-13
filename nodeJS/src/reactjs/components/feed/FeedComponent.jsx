@@ -11,11 +11,7 @@ class FeedComponent extends React.Component {
     this.state = {
       liked: props.liked,
       likes: props.likes,
-      user: props.user,
-      username: 'John Doe'
     }
-
-    this.getUsername();
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
@@ -52,15 +48,15 @@ class FeedComponent extends React.Component {
   }
 
   render() {
-    const { liked, likes, username } = this.state;
-    const { date, message } = this.props;
+    const { liked, likes } = this.state;
+    const { date, message, user } = this.props;
 
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
-          title={username}
-          subtitle={date}
-          avatar={<Avatar random>{username.substring(0,2)}</Avatar>}>
+          title={user.firstName + " " + user.lastName}
+          subtitle={date.substring(0,10)}
+          avatar={<Avatar random>{user.firstName.substring(0,1) + user.lastName.substring(0,1)}</Avatar>}>
         </CardTitle>
         <CardText>
           {(message !== null || message !== "") && (
@@ -86,7 +82,7 @@ class FeedComponent extends React.Component {
 }
 
 FeedComponent.propTypes = {
-  user: PropTypes.number.isRequired,
+  user: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
   message: PropTypes.string,
   liked: PropTypes.bool.isRequired,

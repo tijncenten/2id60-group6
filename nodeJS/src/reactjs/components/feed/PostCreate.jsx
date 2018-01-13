@@ -7,7 +7,7 @@ class PostCreate extends React.Component {
     return (
       <Card className="md-block-centered post-create">
         <CardText>
-          <Avatar className="post-avatar" random>AB</Avatar>
+          <Avatar className="post-avatar" random>{activeUser.firstName.substring(0,1) + activeUser.lastName.substring(0,1)}</Avatar>
           <form className="post-form" onSubmit={this.handleSubmit.bind(this)}>
             <TextField
               id="post-input"

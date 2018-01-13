@@ -30,7 +30,7 @@ export default class Feed extends React.Component {
     var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
 
     // TODO: find a viable id
-    const newPost = { id: 0, user: activeUser.id, message, date, likes: 0 }
+    const newPost = { id: 0, user: activeUser, message, date, likes: 0 }
     this.setState({ posts: [newPost].concat(this.state.posts)});
 
     this.uploadPost(message);
@@ -40,8 +40,25 @@ export default class Feed extends React.Component {
     // Get basic post information
     jQuery.ajax({
       method: 'GET',
-      url: '/api/posts',
+      url: '/api/feed',
       success: (posts) => {
+
+        console.log(posts);
+
+        // Create object for self user
+        posts.forEach(function(post) {
+          console.log(post.owner);
+          if(post.owner == "self") {
+            console.log("creating object for self user")
+            post.owner = {
+              id: activeUser.id,
+              username: activeUser.username,
+              firstName: activeUser.firstName,
+              lastName: activeUser.lastName
+            }
+            console.log(post.owner);
+          }                    
+        });
 
         this.setState({posts:
           posts.map( post => ({
