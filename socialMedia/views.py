@@ -13,8 +13,8 @@ from rest_framework.reverse import reverse
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status, generics, permissions, serializers
 from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
-from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost
-from .serializers import ProfileSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer
+from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost, PostLike
+from .serializers import ProfileSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer
 from .forms import SignUpForm
 
 # Create your views here.
@@ -234,3 +234,23 @@ class PostShare(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user.profile,
             placedOnProfile=self.request.user.profile,
             sharedPost=sharedPost)
+
+class PostLikeList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = PostLikeSerializer
+
+    def get_queryset(self):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        return PostLike.objects.filter(on=post)
+
+    def post(self, request, pk, format=None):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        if post.add_like(self.request.user.profile):
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, pk, format=None):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        if post.remove_like(self.request.user.profile):
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
