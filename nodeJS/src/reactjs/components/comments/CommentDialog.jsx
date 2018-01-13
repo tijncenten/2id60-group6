@@ -31,13 +31,15 @@ class CommentDialog extends React.Component {
 
   createComment(message) {
 
-    var d = new Date();
-    var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    if (message != "" && message != null){
+      var d = new Date();
+      var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
 
-    const newComment = { id: this.state.comments.length, username: "Anon", message, date, likes: 0 }
-    this.setState({ comments: this.state.comments.concat([newComment])});
+      const newComment = { id: this.state.comments.length, username: "Anon", message, date, likes: 0 }
+      this.setState({ comments: this.state.comments.concat([newComment])});
 
-    // TODO: Send to backend
+      // TODO: Send to backend
+    }
   }
 
   loadComments(){

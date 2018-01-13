@@ -25,15 +25,17 @@ export default class Feed extends React.Component {
 
   createPost(message) {
 
-    // Get current date
-    var d = new Date();
-    var date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    if (message != "" && message != null){
+      // Get current date
+      var d = new Date();
+      var date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
 
-    // TODO: find a viable id
-    const newPost = { id: 0, user: activeUser, message, date, likes: 0 }
-    this.setState({ posts: [newPost].concat(this.state.posts)});
+      // TODO: find a viable id
+      const newPost = { id: 0, user: activeUser, message, date, likes: 0 }
+      this.setState({ posts: [newPost].concat(this.state.posts)});
 
-    this.uploadPost(message);
+      this.uploadPost(message);
+    }
   }
 
   downloadPosts() {
