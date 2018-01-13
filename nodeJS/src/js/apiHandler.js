@@ -1,9 +1,12 @@
+import { Avatar } from 'react-md';
+
 export default new class {
   async getProfileByUserName(username){
-    return await jQuery.ajax({
+    const result = await jQuery.ajax({
       method: 'GET',
       url: `/api/profiles/username/${username}`
     });
+    return parseProfile(result);
   }
 
   async getPosts() {
@@ -55,12 +58,26 @@ const parsePost = (post) => {
     post.owner = activeUser;
   }
   if(post.placedOnProfile == 'owner'){
-    post.placedOnProfile = post.owner;
+    post.placedOnProfile = parseProfile(post.owner);
   }
   if(post.placedOnProfile == 'self'){
     post.placedOnProfile = activeUser;
   }
+  post.owner = parseProfile(post.owner);
+  post.placedOnProfile = parseProfile(post.placedOnProfile);
   const date = new Date(post.date);
   post.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
   return post;
 };
+
+const parseProfile = (profile) => {
+  if(profile.firstName === undefined || profile.lastName === undefined){
+    return profile;
+  }
+  const colorArray = Avatar.defaultProps.suffixes;
+  const total = profile.firstName.charCodeAt(0) + profile.lastName.charCodeAt(0);
+  profile.avatarColor = colorArray[total%colorArray.length];
+  return profile;
+}
+
+activeUser = parseProfile(activeUser);
