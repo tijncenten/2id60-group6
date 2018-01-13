@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, FriendRequest, Friendship, Post, SharedPost, NewPost
+from .models import Profile, FriendRequest, Friendship, Post, SharedPost, NewPost, Like, PostLike, CommentLike
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -89,9 +89,17 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = fields = ('id', 'postType', 'owner', 'placedOnProfile', 'date', 'location', 'content', 'likes', 'liked')
 
-class NewPostCreateSerializer(serializers.ModelSerializer):
+class PostLikedMixin(serializers.Serializer):
+    liked = serializers.SerializerMethodField()
+
+    def get_liked(self, obj):
+        if self.context['request'].user.is_authenticated():
+            return PostLike.objects.filter(on=obj, profile=self.context['request'].user.profile).exists()
+        return False
+
+class NewPostCreateSerializer(PostLikedMixin, serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()
 
     owner = serializers.ReadOnlyField(source='owner.id')
@@ -102,7 +110,7 @@ class NewPostCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewPost
-        fields = '__all__'
+        fields = fields = ('id', 'postType', 'owner', 'placedOnProfile', 'date', 'location', 'content', 'likes', 'liked')
 
 # MIXIN
 class PostSubClassProfilesMixin(serializers.Serializer):
@@ -123,7 +131,7 @@ class PostSubClassProfilesMixin(serializers.Serializer):
 class NewPostSerializer(NewPostCreateSerializer, PostSubClassProfilesMixin):
     pass
 
-class SharedPostSerializer(PostSubClassProfilesMixin, serializers.ModelSerializer):
+class SharedPostSerializer(PostLikedMixin, PostSubClassProfilesMixin, serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()
 
     sharedPost = NewPostSerializer(read_only=True)
@@ -134,4 +142,29 @@ class SharedPostSerializer(PostSubClassProfilesMixin, serializers.ModelSerialize
 
     class Meta:
         model = SharedPost
-        fields = ('id', 'postType', 'owner', 'placedOnProfile', 'date', 'location', 'content', 'sharedPost',)
+        fields = ('id', 'postType', 'owner', 'placedOnProfile', 'date', 'location', 'content', 'likes', 'liked', 'sharedPost')
+
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    likeType = serializers.SerializerMethodField()
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    on = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    def get_likeType(self, obj):
+        return 'postLike'
+
+    class Meta:
+        model = PostLike
+        fields = '__all__'
+
+class CommentLikeSerializer(serializers.ModelSerializer):
+    likeType = serializers.SerializerMethodField()
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    on = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    def get_likeType(self, obj):
+        return 'commentLike'
+
+    class Meta:
+        model = CommentLike
+        fields = '__all__'

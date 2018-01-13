@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 # Create your models here.
@@ -95,8 +95,28 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     location = models.CharField(max_length=100)
     content = models.TextField()
+    likes = models.PositiveIntegerField(editable=False, default=0)
 
     objects = InheritanceManager()
+
+    def add_like(self, profile):
+        postLike, created = PostLike.objects.get_or_create(on=self, profile=profile)
+        return created
+
+    def remove_like(self, profile):
+        deleted = PostLike.objects.filter(on=self, profile=profile).delete()
+        return deleted[0] > 0
+
+@receiver(post_save, sender=PostLike)
+def create_post_like(sender, instance, created, **kwargs):
+    if created:
+        instance.on.likes += 1
+        instance.on.save()
+
+@receiver(post_delete, sender=PostLike)
+def delete_post_like(sender, instance, **kwargs):
+    instance.on.likes -= 1
+    instance.on.save()
 
 class SharedPost(Post):
     sharedPost = models.ForeignKey('NewPost', on_delete=models.CASCADE)

@@ -20,6 +20,7 @@ apipatterns = [
     url(r'^posts/new/?$', views.PostCreate.as_view()),
     url(r'^posts/(?P<pk>[0-9]+)/?$', views.PostDetail.as_view()),
     url(r'^posts/(?P<pk>[0-9]+)/share/?$', views.PostShare.as_view()),
+    url(r'^posts/(?P<pk>[0-9]+)/likes/?$', views.PostLikeList.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^docs/?', include_docs_urls(title='Social Media API service')),
     url(r'^$', RedirectView.as_view(url='/api/docs')),
