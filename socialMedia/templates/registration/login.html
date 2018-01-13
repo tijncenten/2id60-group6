@@ -19,10 +19,9 @@
   <!-- Declare variables for data to be retreived from Django here -->
   <script>
     var registrationType = "login";
+    var csrf_token= '{{ csrf_token }}';
   </script>
   <div id="app">
-    {% csrf_token %}
-    {{ form.as_p }}
   </div>
 
   <script src="{% static 'js/registration.bundle.js' %}"></script>
