@@ -16,11 +16,15 @@
 </head>
 
 <body>
-  <h2>Login</h2>
-  <form method="post">
+  <!-- Declare variables for data to be retreived from Django here -->
+  <script>
+    var registrationType = "login";
+  </script>
+  <div id="app">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+  </div>
+
+  <script src="{% static 'js/registration.bundle.js' %}"></script>
 </body>
 </html>
