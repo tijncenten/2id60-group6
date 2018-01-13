@@ -29,9 +29,10 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
-    if created:
+    if created and not instance.is_staff:
         Profile.objects.create(user=instance)
-    instance.profile.save()
+    if not instance.is_staff:
+        instance.profile.save()
 
 class FriendRequest(models.Model):
     sender = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendRequestsSent')
