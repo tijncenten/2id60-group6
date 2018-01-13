@@ -27,7 +27,6 @@ export default class Feed extends React.Component {
   createPost(message) {
     if (message != "" && message != null){
       const createPostCallback = (post) => {
-        console.log(post);
         this.setState({
           posts: [post].concat(this.state.posts)
         });
@@ -46,13 +45,10 @@ export default class Feed extends React.Component {
         posts: posts
       });
     };
-
-    console.log(profile);
     if (profile === undefined) {
       apiHandler.getFeedPosts().then(postCallback);
     } else {
       if(profile != undefined){
-        console.log("download profile posts");
         apiHandler.getProfilePosts(profile.id).then(postCallback);
       }
     }

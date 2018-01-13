@@ -45,7 +45,6 @@ export default new class {
 }
 
 const parsePosts = (posts) => {
-  console.log(posts);
   return posts.map(post => (
     parsePost(post)
   ));
