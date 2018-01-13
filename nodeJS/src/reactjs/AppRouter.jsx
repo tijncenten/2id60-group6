@@ -9,6 +9,7 @@ import ChatView from './views/ChatView.jsx';
 import NotificationView from './views/NotificationView.jsx';
 import SettingsView from './views/SettingsView.jsx';
 import NavItemLink from './components/NavItemLink.jsx';
+import ProfileMenu from './components/ProfileMenu.jsx';
 import Aside from './components/Aside.jsx';
 import ShareVariantIcon from 'mdi-react/ShareVariantIcon';
 import style from '../scss/style.scss';
@@ -73,7 +74,9 @@ class AppRouter extends React.Component {
       <NavigationDrawer
         drawerTitle="Menu"
         toolbarTitle={toolbarTitle}
-        toolbarActions={<TextField placeholder="search" id="testing"/>}
+        toolbarActions={
+          <ProfileMenu />
+        }
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
           {navItems.map(navItem => (
