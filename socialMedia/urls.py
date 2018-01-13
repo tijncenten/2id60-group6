@@ -29,9 +29,9 @@ apipatterns = format_suffix_patterns(apipatterns)
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^profile/(?P<pk>[a-zA-Z0-9.-_]+)$', views.index, name='index'),
+    url(r'^profile/[a-zA-Z0-9.-_]+$', views.index, name='index'),
     url(r'^chats$', views.index, name='index'),
-    url(r'^chats/(?P<pk>[0-9]+)$', views.index, name='index'),
+    url(r'^chats/[0-9]+$', views.index, name='index'),
     url(r'^notifications$', views.index, name='index'),
     url(r'^settings$', views.index, name='index'),
     url(r'^login/?$', auth_views.login, name='login'),

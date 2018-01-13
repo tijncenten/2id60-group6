@@ -2,12 +2,7 @@ import React from 'react';
 import PostCreate from './PostCreate.jsx';
 import FeedComponent from './FeedComponent.jsx';
 import FeedComponentAlbum from './FeedComponentAlbum.jsx';
-
-const authors = [
-  { name: "John", initials: "JD" },
-  { name: "Jane", initials: "AB" },
-  { name: "Richard", initials: "RR" },
-]
+import apiHandler from '../../../js/apiHandler';
 
 export default class Feed extends React.Component {
 
@@ -17,95 +12,61 @@ export default class Feed extends React.Component {
     this.state = {
       posts: []
     }
-
-    this.downloadPosts();
-    this.uploadPost = this.uploadPost.bind(this);
-
   }
 
-  createPost(message) {
+  componentDidMount() {
+    this.downloadPosts(this.props.profile);
+  }
 
-    if (message != "" && message != null){
-      // Get current date
-      var d = new Date();
-      var date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
-
-      // TODO: find a viable id
-      const newPost = { id: 0, user: activeUser, message, date, likes: 0 }
-      this.setState({ posts: [newPost].concat(this.state.posts)});
-
-      this.uploadPost(message);
+  componentWillReceiveProps(nextProps) {
+    if (this.props.profile != nextProps.profile) {
+      this.downloadPosts(nextProps.profile);
     }
   }
 
-  downloadPosts() {
-    // Get basic post information
-    jQuery.ajax({
-      method: 'GET',
-      url: this.props.url,
-      success: (posts) => {
-
-        // Create object for self user
-        posts.forEach(function(post) {
-          if(post.owner == "self") {
-            post.owner = {
-              id: activeUser.id,
-              username: activeUser.username,
-              firstName: activeUser.firstName,
-              lastName: activeUser.lastName
-            }
-          }
+  createPost(message) {
+    if (message != "" && message != null){
+      const createPostCallback = (post) => {
+        console.log(post);
+        this.setState({
+          posts: [post].concat(this.state.posts)
         });
-
-        this.setState({posts:
-          posts.map( post => ({
-              id: post.id,
-              user: post.owner,
-              message: post.content,
-              date: post.date,
-              likes: 0,
-            })
-          )
-        })
+      };
+      if (this.props.profile === undefined) {
+        apiHandler.createPost(activeUser.id, "Amsterdam", message).then(createPostCallback);
+      } else {
+        apiHandler.createPost(this.props.profile.id, "Amsterdam", message).then(createPostCallback);
       }
-    });
+    }
   }
 
-  uploadPost(message) {
+  downloadPosts(profile) {
+    const postCallback = (posts) => {
+      this.setState({
+        posts: posts
+      });
+    };
 
-    jQuery.ajax({
-      method: 'POST',
-      url: '/api/posts/new',
-      data: {
-        csrfmiddlewaretoken: csrf_token,
-        placedOnProfile: activeUser.id,
-        location: 'earth',
-        content: message}
-    });
-  }
-
-  loadPosts() {
-
-    return this.state.posts.map( post =>
-      <FeedComponent
-        key = {post.id}
-        user = {post.user}
-        message = {post.message}
-        date = {post.date}
-        likes = {post.likes}
-        liked = {false} />
-      // TODO determine whether the user has liked this comment
-    );
+    console.log(profile);
+    if (profile === undefined) {
+      apiHandler.getFeedPosts().then(postCallback);
+    } else {
+      if(profile != undefined){
+        console.log("download profile posts");
+        apiHandler.getProfilePosts(profile.id).then(postCallback);
+      }
+    }
   }
 
   render() {
-    const posts = this.loadPosts();
-
     return (
-
       <div className="feed-body">
         <PostCreate createPost = { this.createPost.bind(this) } />
-        {posts}
+        {this.state.posts.map(post => (
+          <FeedComponent
+            key={post.id}
+            data={post} />
+        ))}
       </div>
     );
   }

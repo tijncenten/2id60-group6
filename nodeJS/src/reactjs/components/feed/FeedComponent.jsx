@@ -9,26 +9,21 @@ class FeedComponent extends React.Component {
     super(props);
 
     this.state = {
-      liked: props.liked,
-      likes: props.likes,
+      liked: true,
+      likes: 7,
     }
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
   handleLikeToggle() {
-
     if (this.state.liked) {
-
       // Substract a like
       this.state.likes -= 1;
       // TODO send to backend
-
     } else {
-
       // Add a like
       this.state.likes += 1;
       // TODO: send to backend
-
     }
 
     this.setState({
@@ -38,18 +33,19 @@ class FeedComponent extends React.Component {
 
   render() {
     const { liked, likes } = this.state;
-    const { date, message, user } = this.props;
+    const { id, postType, owner, placedOnProfile, date, location, content } = this.props.data;
+    const initials = (owner.firstName[0] + owner.lastName[0]).toUpperCase();
 
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
-          title={user.firstName + " " + user.lastName}
-          subtitle={date.substring(0,10)}
-          avatar={<Avatar random>{user.firstName.substring(0,1) + user.lastName.substring(0,1)}</Avatar>}>
+          title={owner.firstName + " " + owner.lastName}
+          subtitle={date}
+          avatar={<Avatar random>{initials}</Avatar>}>
         </CardTitle>
         <CardText>
-          {(message !== null || message !== "") && (
-            <p>{message}</p>
+          {(content !== null || content !== "") && (
+            <p>{content}</p>
           )}
           {this.props.children !== null && (
             this.props.children
@@ -71,10 +67,7 @@ class FeedComponent extends React.Component {
 }
 
 FeedComponent.propTypes = {
-  user: PropTypes.object.isRequired,
-  date: PropTypes.string.isRequired,
-  message: PropTypes.string,
-  liked: PropTypes.bool.isRequired,
+  data: PropTypes.object.isRequired,
 }
 
 export default FeedComponent;

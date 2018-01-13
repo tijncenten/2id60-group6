@@ -23,7 +23,8 @@ const navItems = [{
     component: MainView
   }, {
     label: 'My profile',
-    to: `${TO_PREFIX}/profile/julian`,
+    to: `${TO_PREFIX}/profile/${activeUser.username}`,
+    path: `${TO_PREFIX}/profile/:username`,
     exact: false,
     icon: 'person',
     component: ProfileView,
@@ -76,7 +77,11 @@ class AppRouter extends React.Component {
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
           {navItems.map(navItem => (
-            <Route path={navItem.to} exact={navItem.exact} key={navItem.to} render={props => React.createElement(navItem.component, Object.assign({onSetTitle: this.setCurrentTitle}, ...props)) } />
+            <Route
+              path={navItem.path == undefined ? navItem.to : navItem.path}
+              exact={navItem.exact}
+              key={navItem.to}
+              render={props => {return React.createElement(navItem.component, Object.assign({}, props, { onSetTitle: this.setCurrentTitle }) )} } />
           ))}
         </Switch>
       </NavigationDrawer>
@@ -85,7 +90,6 @@ class AppRouter extends React.Component {
 }
 
 export default withRouter(AppRouter)
-
 
 // <Route path={navItems[0].to} exact component={MainView} />
 // <Route path={navItems[1].to} exact component={MainView} />

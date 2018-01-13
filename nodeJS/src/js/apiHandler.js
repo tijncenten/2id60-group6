@@ -1,10 +1,9 @@
 export default new class {
   async getProfileByUserName(username){
-    const result = await jQuery.ajax({
+    return await jQuery.ajax({
       method: 'GET',
-      url: `/api/profiles/username/${username}/`
+      url: `/api/profiles/username/${username}`
     });
-    return parsePosts(result);
   }
 
   async getPosts() {
@@ -46,6 +45,7 @@ export default new class {
 }
 
 const parsePosts = (posts) => {
+  console.log(posts);
   return posts.map(post => (
     parsePost(post)
   ));
