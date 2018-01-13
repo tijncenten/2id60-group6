@@ -24,6 +24,7 @@ const navItems = [{
   }, {
     label: 'My profile',
     to: `${TO_PREFIX}/profile/julian`,
+    path: `${TO_PREFIX}/profile/:username`,
     exact: false,
     icon: 'person',
     component: ProfileView,
@@ -76,7 +77,7 @@ class AppRouter extends React.Component {
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
           {navItems.map(navItem => (
-            <Route path={navItem.to} exact={navItem.exact} key={navItem.to} render={props => React.createElement(navItem.component, Object.assign({onSetTitle: this.setCurrentTitle}, ...props)) } />
+            <Route path={navItem.path == undefined ? navItem.to : navItem.path} exact={navItem.exact} key={navItem.to} render={props => React.createElement(navItem.component, Object.assign({onSetTitle: this.setCurrentTitle}, ...props)) } />
           ))}
         </Switch>
       </NavigationDrawer>

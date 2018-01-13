@@ -13,15 +13,12 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/app.bundle.css' %}" type="text/css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-  <script src="{% static 'rest_framework/js/coreapi-0.1.1.js' %}"></script>
-  <script src="{% url 'api-docs:schema-js' %}"></script>
 </head>
 
 <body>
   <!-- Declare variables for data to be retreived from Django here -->
   <script>
-    var activeUser = { id: {{user.pk}}, name: "{{user}}" };
+    var activeUser = JSON.parse('{{ activeUser|safe }}');
     var csrf_token= '{{ csrf_token }}';
   </script>
   <div id="app">

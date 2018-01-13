@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import APIException, AuthenticationFailed
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
+from rest_framework.renderers import JSONRenderer
 from rest_framework import status, generics, permissions, serializers
 from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
 from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost
@@ -20,6 +21,13 @@ from .forms import SignUpForm
 class indexView(LoginRequiredMixin, TemplateView):
     template_name = 'socialMedia/index.html'
     login_url = '/login'
+
+def indexView(request):
+    context = {}
+    context['request'] = request
+    activeUser = ProfileSerializer(request.user.profile, context=context).data
+    activeUserJSON = JSONRenderer().render(activeUser)
+    return render(request, 'socialMedia/index.html', {'activeUser': activeUserJSON})
 
 def signup(request):
     if request.method == 'POST':

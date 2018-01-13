@@ -9,41 +9,22 @@ class FeedComponent extends React.Component {
     super(props);
 
     this.state = {
-      liked: props.liked,
-      likes: props.likes,
-      user: props.user,
-      username: 'John Doe'
+      liked: true,
+      likes: 7,
     }
 
-    this.getUsername();
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
-  getUsername(){
-    // Retreive username via api
-    jQuery.ajax({
-      method: 'GET',
-      url: ('/api/profiles/' + this.props.user.toString()),
-      success: (user) => {
-          this.setState({ username: user.username });
-      }
-    });
-  }
-
   handleLikeToggle() {
-
     if (this.state.liked) {
-
       // Substract a like
       this.state.likes -= 1;
       // TODO send to backend
-
     } else {
-
       // Add a like
       this.state.likes += 1;
       // TODO: send to backend
-
     }
 
     this.setState({
@@ -52,19 +33,20 @@ class FeedComponent extends React.Component {
   }
 
   render() {
-    const { liked, likes, username } = this.state;
-    const { date, message } = this.props;
+    const { liked, likes } = this.state;
+    const { id, postType, owner, placedOnProfile, date, location, content } = this.props.data;
+    const initials = (owner.firstName[0] + owner.lastName[0]).toUpperCase();
 
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
-          title={username}
+          title={owner.firstName + " " + owner.lastName}
           subtitle={date}
-          avatar={<Avatar random>{username.substring(0,2)}</Avatar>}>
+          avatar={<Avatar random>{initials}</Avatar>}>
         </CardTitle>
         <CardText>
-          {(message !== null || message !== "") && (
-            <p>{message}</p>
+          {(content !== null || content !== "") && (
+            <p>{content}</p>
           )}
           {this.props.children !== null && (
             this.props.children
@@ -81,15 +63,12 @@ class FeedComponent extends React.Component {
         <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
         <ShareDialog ref={dialog => {this.shareDialog = dialog}}/>
       </Card>
-    );
+    );return parsePosts(result);
   }
 }
 
 FeedComponent.propTypes = {
-  user: PropTypes.number.isRequired,
-  date: PropTypes.string.isRequired,
-  message: PropTypes.string,
-  liked: PropTypes.bool.isRequired,
+  data: PropTypes.object.isRequired,
 }
 
 export default FeedComponent;
