@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core import exceptions
-from django.db.models import Q
+from django.db.models import Q, Value
+from django.db.models.functions import Concat
 from django.http import Http404, HttpResponse
 from django.views.generic import TemplateView
 from django.contrib.auth import login, authenticate
@@ -53,6 +54,20 @@ class ProfileList(generics.ListAPIView):
     """
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        queryset = Profile.objects.all()
+        query = self.request.query_params.get('q', None)
+        if query is not None:
+            queryset = queryset.annotate(fullName=Concat('user__first_name', Value(' '), 'user__last_name'))
+            queryset = queryset.filter(fullName__icontains=query)
+        nr = self.request.query_params.get('nr', None)
+        if nr is not None:
+            try:
+                queryset = queryset[:int(nr)]
+            except:
+                raise serializers.ValidationError({'nr': 'This parameter needs to be an integer'})
+        return queryset
 
 class ProfileDetail(generics.RetrieveAPIView):
     """
