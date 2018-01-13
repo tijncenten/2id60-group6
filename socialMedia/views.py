@@ -21,6 +21,15 @@ class indexView(LoginRequiredMixin, TemplateView):
     template_name = 'socialMedia/index.html'
     login_url = '/login'
 
+def index(request):
+    if not request.user.is_authenticated():
+        return redirect(to='/login')
+    context = {}
+    context['request'] = request
+    activeUser = ProfileSerializer(request.user.profile, context=context).data
+    activeUserJSON = JSONRenderer().render(activeUser)
+    return render(request, 'socialMedia/index.html', {'activeUser': activeUserJSON})
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)

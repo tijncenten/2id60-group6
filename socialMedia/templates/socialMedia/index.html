@@ -21,12 +21,7 @@
 <body>
   <!-- Declare variables for data to be retreived from Django here -->
   <script>
-    var activeUser = {
-      id: {{user.pk}},
-      username: "{{user}}",
-      firstName: "{{user.first_name}}",
-      lastName: "{{user.last_name}}"
-    };
+    var activeUser = JSON.parse('{{ activeUser|safe }}');
     var csrf_token= '{{ csrf_token }}';
   </script>
   <div id="app">
