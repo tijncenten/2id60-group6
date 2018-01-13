@@ -41,7 +41,7 @@ class FeedComponent extends React.Component {
         <CardTitle
           title={owner.firstName + " " + owner.lastName}
           subtitle={date}
-          avatar={<Avatar random>{initials}</Avatar>}>
+          avatar={<Avatar suffix={owner.avatarColor}>{initials}</Avatar>}>
         </CardTitle>
         <CardText>
           {(content !== null || content !== "") && (

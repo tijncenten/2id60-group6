@@ -7,7 +7,7 @@ const ProfileMenu = ({ simplifiedMenu }) => (
   <DropdownMenu
     id={`${!simplifiedMenu ? 'smart-' : ''}avatar-dropdown-menu`}
     menuItems={[
-      <NavLink to="/profile/julian">
+      <NavLink to={`/profile/${activeUser.username}`}>
         Profile
       </NavLink>,
       { divider: true },
@@ -30,7 +30,7 @@ const ProfileMenu = ({ simplifiedMenu }) => (
         </IconSeparator>
       }
     >
-      <Avatar random>{activeUser.firstName.substring(0,1) + activeUser.lastName.substring(0,1)}</Avatar>
+      <Avatar suffix={activeUser.avatarColor}>{activeUser.firstName[0] + activeUser.lastName[0]}</Avatar>
     </AccessibleFakeButton>
   </DropdownMenu>
 );

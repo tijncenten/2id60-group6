@@ -1,0 +1,25 @@
+.registration-card {
+  width: 100%;
+  max-width:400px;
+  margin-top: 16px;
+  padding:16px;
+
+  .card-title {
+    padding-bottom: 0px;
+  }
+  .input-field {
+    width: calc(100% - 16px);
+  }
+  .password-list {
+    background: rgb(249, 249, 249);
+    border-radius: 10px;
+    padding: 10px;
+    list-style-type: none;
+    font-size: 0.85em;
+    color: #9f9f9f;
+  }
+
+  .submit-button {
+    margin-right:10px;
+  }
+} 
