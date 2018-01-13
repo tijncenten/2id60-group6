@@ -15,17 +15,6 @@ class FeedComponent extends React.Component {
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
-  getUsername(){
-    // Retreive username via api
-    jQuery.ajax({
-      method: 'GET',
-      url: ('/api/profiles/' + this.props.user.toString()),
-      success: (user) => {
-          this.setState({ username: user.username });
-      }
-    });
-  }
-
   handleLikeToggle() {
 
     if (this.state.liked) {

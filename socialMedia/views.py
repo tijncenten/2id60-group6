@@ -172,7 +172,7 @@ class ProfilePostList(PostList):
             except:
                 raise Http404()
         queryset = super(ProfilePostList, self).get_queryset()
-        return queryset.filter(placedOnProfile=profile)
+        return queryset.filter(placedOnProfile=profile).order_by('-date')
 
 # View for the feed on the 'home' page
 class FeedList(PostList):

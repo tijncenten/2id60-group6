@@ -27,7 +27,7 @@ export default class Feed extends React.Component {
 
     // Get current date
     var d = new Date();
-    var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+    var date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
 
     // TODO: find a viable id
     const newPost = { id: 0, user: activeUser, message, date, likes: 0 }
@@ -40,24 +40,19 @@ export default class Feed extends React.Component {
     // Get basic post information
     jQuery.ajax({
       method: 'GET',
-      url: '/api/feed',
+      url: this.props.url,
       success: (posts) => {
-
-        console.log(posts);
 
         // Create object for self user
         posts.forEach(function(post) {
-          console.log(post.owner);
           if(post.owner == "self") {
-            console.log("creating object for self user")
             post.owner = {
               id: activeUser.id,
               username: activeUser.username,
               firstName: activeUser.firstName,
               lastName: activeUser.lastName
             }
-            console.log(post.owner);
-          }                    
+          }
         });
 
         this.setState({posts:

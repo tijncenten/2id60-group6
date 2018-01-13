@@ -12,7 +12,7 @@ export default class MainView extends View {
   render() {
     return (
       <div>
-        <Feed />
+        <Feed url="/api/feed"/>
       </div>
     );
   }

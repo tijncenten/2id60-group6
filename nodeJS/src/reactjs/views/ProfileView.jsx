@@ -17,7 +17,7 @@ export default class ProfileView extends View {
     return (
       <div>
         <ProfileBanner />
-        <Route path="/profile/:username" exact render={props => <Feed {...props} />} />
+        <Route path="/profile/:username" exact render={props => <Feed {...props} url={"/api/profiles/" + activeUser.id + "/posts"} />} />
         <Route path="/profile/:username/friends" exact render={props => <FriendList {...props} />} />
       </div>
     );
