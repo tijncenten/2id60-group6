@@ -206,6 +206,16 @@ class PostCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user.profile)
 
+    def post(self, request, *args, **kwargs):
+        context = {}
+        context['request'] = request
+        serializer = NewPostSerializer(data=request.data, context=context)
+        if serializer.is_valid():
+            profile = Profile.objects.get(id=request.data['placedOnProfile'])
+            serializer.save(owner=request.user.profile, placedOnProfile=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class PostDetail(PostSubClassFieldsMixin, generics.RetrieveDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsPostOwnerOrReadOnly)
     serializer_class = PostSerializer
