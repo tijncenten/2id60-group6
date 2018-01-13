@@ -25,6 +25,39 @@ html, body {
   font-size: 8px;
 }
 
+.title-toolbar {
+  position: relative;
+  width: 100%;
+
+  .toolbar-title-text {
+    display:none;
+  }
+
+  .search-bar {
+    display:inline-block;
+    padding:10px;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+
+    div {
+      background-color: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      padding: 0 10px;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .title-toolbar .toolbar-title-text {
+    display: initial;
+  }
+}
+
+
 
 
 

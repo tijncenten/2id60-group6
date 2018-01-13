@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Toolbar, NavigationDrawer, TextField } from 'react-md';
+import { Button, Toolbar, NavigationDrawer, TextField, Autocomplete, FontIcon } from 'react-md';
 import { withRouter } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import MainView from './views/MainView.jsx';
@@ -70,10 +70,54 @@ class AppRouter extends React.Component {
   render() {
     const { toolbarTitle } = this.state;
     const { location } = this.props;
+
+    const data = [
+      {
+        id: 1,
+        username: "John.Doe",
+        firstName: "John",
+        lastName: "Doe",
+      },
+      {
+        id: 1,
+        username: "Jane.Doe",
+        firstName: "Jane",
+        lastName: "Doe",
+      },
+      {
+        id: 1,
+        username: "Richard.Doe",
+        firstName: "Richard",
+        lastName: "Doe",
+      },
+    ]
+
+    const title = (
+      <span className="title-toolbar">
+        <span className="toolbar-title-text">{toolbarTitle}</span>
+        <Autocomplete
+          id="search"
+          block
+          dataLabel="name"
+          dataValue="key"
+          data={data}
+          dataLabel="firstName"
+          placeholder="Search"
+          toolbar
+          autoFocus
+          className="search-bar"
+          onAutocomplete={(suggestion, suggestionIndex, matches) => {
+            console.log(suggestion);
+            console.log(suggestionIndex);
+            console.log(matches);
+          }}
+        />
+      </span>
+    );
     return (
       <NavigationDrawer
         drawerTitle="Menu"
-        toolbarTitle={toolbarTitle}
+        toolbarTitle={title}
         toolbarActions={
           <ProfileMenu />
         }
