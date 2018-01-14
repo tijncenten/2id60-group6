@@ -27,7 +27,6 @@ export default class ProfileBanner extends React.Component {
         </span>
       )
     }
-
     return(
       <div className="md-paper md-paper--1 profile-banner">
         <div className="profile-banner-inner">
@@ -50,7 +49,7 @@ export default class ProfileBanner extends React.Component {
             <Avatar src="/static/images/ER-Diagram-Database.png"/>
             <CardActions className="profile-banner-friends-button">
               <NavLink to={`/profile/${profile.username}/friends`}> 
-                <Button raised primary>friends <span className="profile-banner-number-of-friends">243</span></Button>
+                <Button raised primary>friends <span className="profile-banner-number-of-friends">{profile.friendCount}</span></Button>
               </NavLink>
             </CardActions>
           </div>
