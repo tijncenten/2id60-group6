@@ -68,7 +68,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendRequest
-        fields = '__all__'
+        fields = ('sender', 'receiver', 'username', 'firstName', 'lastName', 'email', 'date')
 
 class PostSerializer(serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()

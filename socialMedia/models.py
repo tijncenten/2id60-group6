@@ -1,3 +1,4 @@
+from channels import Channel
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
@@ -44,6 +45,15 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return 'Friend request from ' + str(self.sender) + ' to ' + str(self.receiver)
+
+@receiver(post_save, sender=FriendRequest)
+def update_friend_request(sender, instance, created, **kwargs):
+    if created:
+        Channel('notifications').send({
+            "to": instance.receiver.id,
+            "type": "friendRequest",
+            "id": instance.sender.id,
+        })
 
 class Friendship(models.Model):
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='friendshipCreatorSet')

@@ -159,6 +159,14 @@ class FriendRequestDetail(generics.RetrieveDestroyAPIView):
     def get_queryset(self):
         return FriendRequest.objects.filter(receiver=self.request.user.profile)
 
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {}
+        filter['sender_id'] = self.kwargs[self.lookup_url_kwarg]
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
 class FriendRequestAccept(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
     serializer_class = FriendRequestSerializer
@@ -166,7 +174,7 @@ class FriendRequestAccept(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            friendRequest = FriendRequest.objects.get(id=kwargs['fk'])
+            friendRequest = FriendRequest.objects.get(sender__id=kwargs['fk'])
             friendRequest.delete()
             sender = friendRequest.sender
             receiver = friendRequest.receiver

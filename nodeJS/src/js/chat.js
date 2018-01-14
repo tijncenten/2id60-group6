@@ -1,7 +1,7 @@
 export const ChatSocket = new class {
   constructor() {
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var url = ws_scheme + '://' + window.location.host + "/chat/";
+    var url = ws_scheme + '://' + window.location.host + "/ws/";
     this._socket = new WebSocket(url);
 
     this._socket.onmessage = (e) => {
