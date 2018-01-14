@@ -5,11 +5,74 @@ from model_utils.managers import InheritanceManager
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
+from PIL import Image
+import os, sys, io
+from io import BytesIO
+from django.core.files import File
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+
 # Create your models here.
+def user_directory_path(instance, filename):
+    return 'user_{0}/profile-picture/{1}'.format(instance.id, filename)
+
 class Profile(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='profile')
     friends = models.ManyToManyField('self', through='Friendship', symmetrical=False, related_name='friends+')
     bio = models.CharField(max_length=254, default='')
+    profilePicture = models.ImageField(upload_to=user_directory_path, blank=True)
+    profilePictureNormal = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)
+    profilePictureSmall = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)
+    profilePictureThumb = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if self.profilePicture:
+            #Large profile picture
+            img = Image.open(self.profilePicture)
+            output = BytesIO()
+            img.thumbnail((800, 800), Image.ANTIALIAS)
+            img.save(output, format='JPEG', quality=100)
+            output.seek(0)
+            self.profilePicture = InMemoryUploadedFile(output, 'profilePicture', "%s.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+
+            width, height = img.size
+            left = 0
+            right = width
+            top = 0
+            bottom = height
+            if width < height:
+                top = (height - width)/2
+                bottom = (height + width)/2
+            if height < width:
+                left = (width - height)/2
+                right = (width + height)/2
+
+            top = int(top)
+            bottom = int(bottom)
+
+            #Normal profile picture
+
+            output = BytesIO()
+            img = img.crop((left, top, right, bottom))
+            img.thumbnail((200, 200), Image.ANTIALIAS)
+            img.save(output, format='JPEG', quality=100)
+            output.seek(0)
+            self.profilePictureNormal = InMemoryUploadedFile(output, 'profilePictureNormal', "%s-normal.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+
+            #Small profile picture
+            output = BytesIO()
+            img.thumbnail((100, 100), Image.ANTIALIAS)
+            img.save(output, format='JPEG', quality=100)
+            output.seek(0)
+            self.profilePictureSmall = InMemoryUploadedFile(output, 'profilePictureSmall', "%s-small.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+
+            #Thumb profile picture
+            output = BytesIO()
+            img.thumbnail((40, 40), Image.ANTIALIAS)
+            img.save(output, format='JPEG', quality=100)
+            output.seek(0)
+            self.profilePictureThumb = InMemoryUploadedFile(output, 'profilePictureThumb', "%s-thumb.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+        super(Profile, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.user.username

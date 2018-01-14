@@ -83,6 +83,10 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
                 return Profile.objects.get(user=self.request.user)
         return super().get_object()
 
+    def put(self, request, *args, **kwargs):
+        
+        return self.update(request, *args, **kwargs)
+
 class ProfileDetailUsername(ProfileDetail):
 
     def get_object(self):

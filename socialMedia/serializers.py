@@ -7,6 +7,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     firstName = serializers.ReadOnlyField(source='user.first_name')
     lastName = serializers.ReadOnlyField(source='user.last_name')
     email = serializers.ReadOnlyField(source='user.email')
+    profilePicture = serializers.ImageField(read_only=True)
     relation = serializers.SerializerMethodField()
     friendCount = serializers.SerializerMethodField()
 
@@ -47,13 +48,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'relation', 'friendCount')
+        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'profilePicture', 'relation', 'friendCount')
 
 class ProfileDetailSerializer(ProfileSerializer):
+    profilePicture = serializers.ImageField()
 
     class Meta:
         model = Profile
-        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'bio', 'relation', 'friendCount')
+        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'bio', 'profilePicture', 'relation', 'friendCount')
 
 class FriendSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='friend.id')

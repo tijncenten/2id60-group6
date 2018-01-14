@@ -2,6 +2,7 @@ webtechvenv
 node_modules
 *.pyc
 __pycache__
+userFiles
 *.bundle.js
 *.bundle.js.map
 *.bundle.css
