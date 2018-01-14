@@ -13,6 +13,9 @@ import ProfileMenu from './components/ProfileMenu.jsx';
 import Aside from './components/Aside.jsx';
 import ShareVariantIcon from 'mdi-react/ShareVariantIcon';
 import style from '../scss/style.scss';
+import apiHandler from '../js/apiHandler';
+import history from '../js/history';
+
 
 const TO_PREFIX = '';
 
@@ -57,10 +60,20 @@ class AppRouter extends React.Component {
     super(props);
 
     this.state = {
-      toolbarTitle: "Title"
+      toolbarTitle: "Title",
+      data: []
     };
 
     this.setCurrentTitle = this.setCurrentTitle.bind(this);
+    this.search = this.search.bind(this);
+  }
+
+  search(query) {
+    apiHandler.getProfileBySearch(query, 5).then((result) => {
+      this.setState({
+        data: result
+      });
+    })
   }
 
   setCurrentTitle(title) {
@@ -68,29 +81,8 @@ class AppRouter extends React.Component {
   }
 
   render() {
-    const { toolbarTitle } = this.state;
+    const { toolbarTitle, data } = this.state;
     const { location } = this.props;
-
-    const data = [
-      {
-        id: 1,
-        username: "John.Doe",
-        firstName: "John",
-        lastName: "Doe",
-      },
-      {
-        id: 1,
-        username: "Jane.Doe",
-        firstName: "Jane",
-        lastName: "Doe",
-      },
-      {
-        id: 1,
-        username: "Richard.Doe",
-        firstName: "Richard",
-        lastName: "Doe",
-      },
-    ]
 
     const title = (
       <span className="title-toolbar">
@@ -98,18 +90,18 @@ class AppRouter extends React.Component {
         <Autocomplete
           id="search"
           block
-          dataLabel="name"
-          dataValue="key"
           data={data}
-          dataLabel="firstName"
+          dataLabel="fullname"
           placeholder="Search"
+          onChange={this.search}
           toolbar
+          clearOnAutocomplete
+          filter={null}
           autoFocus
           className="search-bar"
+          listClassName="search-list"
           onAutocomplete={(suggestion, suggestionIndex, matches) => {
-            console.log(suggestion);
-            console.log(suggestionIndex);
-            console.log(matches);
+            history.push(`/profile/${matches[suggestionIndex].username}`);
           }}
         />
       </span>
@@ -119,7 +111,7 @@ class AppRouter extends React.Component {
         drawerTitle="Menu"
         toolbarTitle={title}
         toolbarActions={
-          <ProfileMenu />
+          <ProfileMenu className='profile-menu' />
         }
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>

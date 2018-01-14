@@ -9,6 +9,22 @@ export default new class {
     return parseProfile(result);
   }
 
+  async getProfileBySearch(search, maximum){
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/profiles?q=${encodeURIComponent(search)}&nr=${maximum}`
+    })
+    return parseProfilesSearch(result);
+  }
+
+  async getFriendsByProfileId(id) {
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/profiles/${id}/friends`,
+    })
+    return parseProfiles(result);
+  }
+
   async getPosts() {
     const result = await jQuery.ajax({
       method: 'GET',
@@ -70,6 +86,12 @@ const parsePost = (post) => {
   return post;
 };
 
+const parseProfiles = (profiles) => {
+  return profiles.map(profile => (
+    parseProfile(profile)
+  ));
+}
+
 const parseProfile = (profile) => {
   if(profile.firstName === undefined || profile.lastName === undefined){
     return profile;
@@ -78,6 +100,15 @@ const parseProfile = (profile) => {
   const total = profile.firstName.charCodeAt(0) + profile.lastName.charCodeAt(0);
   profile.avatarColor = colorArray[total%colorArray.length];
   return profile;
+}
+
+const parseProfilesSearch = (profiles) => {
+  return profiles.map(profile => ({
+    id: profile.id,
+    fullname: `${profile.firstName} ${profile.lastName}`,
+    username: profile.username,
+    relation: profile.relation.type,
+  }));  
 }
 
 activeUser = parseProfile(activeUser);

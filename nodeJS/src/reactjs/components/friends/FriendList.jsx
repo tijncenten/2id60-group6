@@ -1,45 +1,36 @@
 import React from 'react';
 import FriendComponent from './FriendComponent.jsx';
-
-const data = [
-  { profile:{ fullname: "John 1", initials: "JD" },   date: "2018-3-1"},
-  { profile:{ fullname: "Jane 2", initials: "JD" },   date: "2018-6-1"},
-  { profile:{ fullname: "Richaard 3", initials: "JD" },   date: "2018-2-1"},
-  { profile:{ fullname: "John 4", initials: "JD" },   date: "2018-3-1"},
-  { profile:{ fullname: "Jane 5", initials: "JD" },   date: "2018-6-1"},
-  { profile:{ fullname: "Richaard 6", initials: "JD" },   date: "2018-2-1"},
-  { profile:{ fullname: "John doe", initials: "JD" },   date: "2018-3-1"},
-  { profile:{ fullname: "Jane doe", initials: "JD" },   date: "2018-6-1"},
-  { profile:{ fullname: "Richaard doe", initials: "JD" },   date: "2018-2-1"},
-]
+import apiHandler from '../../../js/apiHandler';
 
 export default class FriendList extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
-      profiles: [
-        { id: 0, profile:{ fullname: "John 1", initials: "JD" },   date: "2018-3-1"},
-        { id: 1, profile:{ fullname: "Jane 2", initials: "JD" },   date: "2018-6-1"},
-        { id: 2, profile:{ fullname: "Richaard 3", initials: "JD" },   date: "2018-2-1"},
-        { id: 3, profile:{ fullname: "John 4", initials: "JD" },   date: "2018-3-1"},
-        { id: 4, profile:{ fullname: "Jane 5", initials: "JD" },   date: "2018-6-1"},
-        { id: 5, profile:{ fullname: "Richaard 6", initials: "JD" },   date: "2018-2-1"},
-        { id: 6, profile:{ fullname: "John doe", initials: "JD" },   date: "2018-3-1"},
-        { id: 7, profile:{ fullname: "Jane doe", initials: "JD" },   date: "2018-6-1"},
-        { id: 8, profile:{ fullname: "Richaard doe", initials: "JD" },   date: "2018-2-1"},
-      ]
+      friends: null,
+      isMyself: false
+    }
+  }
+
+  componentDidMount() {
+    apiHandler.getFriendsByProfileId(this.props.profile.id).then(result => {
+      this.setState({
+        friends: result
+      });
+    });
+    if(this.props.profile.relation.type === "self"){
+      this.setState({
+        isMyself: true
+      });
     }
   }
 
   loadProfiles() {
-    return this.state.profiles.map( profile =>
+    return this.state.friends.map(profile =>
       <FriendComponent
-        key = {profile.id}
-        id = {profile.id}
-        profile = {profile.profile}
-        date = {profile.date}
+        key={profile.id}
+        profile={profile}
+        isMyself={this.state.isMyself}
         deleteFriend={this.deleteFriend.bind(this)} />
     )
   }
@@ -57,6 +48,14 @@ export default class FriendList extends React.Component {
   }
 
   render() {
+    if(this.state.friends === null){
+      return (
+        <div>
+          <span className="loading">
+          </span>
+        </div>
+      );
+    }
     const profiles = this.loadProfiles();
     return (
       <div className="friend-list-body">

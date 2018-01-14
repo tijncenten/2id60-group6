@@ -13,7 +13,7 @@ export default class ProfileView extends View {
     this.title = "Profile";
 
     this.state = {
-      profile: null
+      profile: null,
     };
   }
 
@@ -27,11 +27,19 @@ export default class ProfileView extends View {
 
 
   render() {
+    if(this.state.profile === null){
+      return (
+        <div>
+          <span className="loading">
+          </span>
+        </div>
+      );
+    }
     return (
       <div>
-        <ProfileBanner />
+        <ProfileBanner profile={this.state.profile}/>
         <Route path="/profile/:username" exact render={props => <Feed {...props} profile={this.state.profile} />} />
-        <Route path="/profile/:username/friends" exact render={props => <FriendList {...props} />} />
+        <Route path="/profile/:username/friends" exact render={props => <FriendList {...props} profile={this.state.profile} />} />
       </div>
     );
   }

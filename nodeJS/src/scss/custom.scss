@@ -12,6 +12,27 @@ html, body {
   margin:0;
 }
 
+.loading {
+  display:block;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 2px solid grey;
+  border-left-color: transparent;
+  animation-name: loading;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes loading {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 
 .dialog-close-button {
   position: fixed;
@@ -47,6 +68,24 @@ html, body {
       background-color: rgba(255,255,255,0.2);
       border-radius: 2px;
       padding: 0 10px;
+    }
+
+    .search-list > li > div:after {
+      font-family: "Material Icons";
+      height:40px;
+      color: grey;
+      vertical-align: middle;
+      display:inline-table;
+    }
+    .search-list > li > div[relation=friends]:after {
+      content: "done";
+      color: green;
+    }
+    .search-list > li > div[relation=none]:after {
+      content: "person_add";
+    }
+    .search-list > li > div[relation=self]:after {
+      content: "account_circle";
     }
   }
 }
