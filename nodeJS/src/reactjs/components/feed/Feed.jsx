@@ -39,6 +39,16 @@ export default class Feed extends React.Component {
     }
   }
 
+  deletePost(id) {
+    var newPosts = this.state.posts;
+    newPosts.splice(this.state.posts.findIndex(function(el){
+      return el.id == id;
+    }), 1);
+    this.setState( {posts: newPosts} );
+
+    apiHandler.postDelete(id);
+  }
+
   downloadPosts(profile) {
     const postCallback = (posts) => {
       this.setState({
@@ -61,6 +71,7 @@ export default class Feed extends React.Component {
         {this.state.posts.map(post => (
           <FeedComponent
             key={post.id}
+            deletePost={ this.deletePost.bind(this) }
             data={post} />
         ))}
       </div>

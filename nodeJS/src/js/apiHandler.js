@@ -91,6 +91,16 @@ export default new class {
       }
     });
   }
+
+  async postDelete(id) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${id}`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
 }
 
 const parsePosts = (posts) => {

@@ -4,6 +4,7 @@ import { Avatar, Button, Card, CardTitle, CardText, CardActions } from 'react-md
 import { NavLink } from 'react-router-dom'
 import CommentDialog from '../comments/CommentDialog.jsx';
 import ShareDialog from './ShareDialog.jsx';
+import DeleteDialog from './DeleteDialog.jsx';
 import SharedFeedComponent from './SharedFeedComponent.jsx';
 import apiHandler from '../../../js/apiHandler';
 
@@ -22,6 +23,7 @@ class FeedComponent extends React.Component {
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
     this.handleCommentOpen = this.handleCommentOpen.bind(this);
     this.handleShareOpen = this.handleShareOpen.bind(this);
+    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
   }
 
   handleLikeToggle() {
@@ -44,6 +46,10 @@ class FeedComponent extends React.Component {
 
   handleShareOpen() {
     this.shareDialog.show();
+  }
+
+  handleDeleteOpen() {
+    this.deleteDialog.show();
   }
 
   render() {
@@ -94,9 +100,11 @@ class FeedComponent extends React.Component {
           </div>
           <Button icon primary onClick={this.handleCommentOpen}>comment</Button>
           <Button icon primary onClick={this.handleShareOpen}>share</Button>
+          {owner.id == activeUser.id && <Button icon primary onClick={this.handleDeleteOpen}>delete</Button> }
         </CardActions>
         <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}}/>
         <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}}/>
+        {owner.id == activeUser.id && <DeleteDialog ref={ (dialog) => { this.deleteDialog = dialog}} deletePost={this.props.deletePost} id={this.props.data.id}/> }
       </Card>
     );
   }
