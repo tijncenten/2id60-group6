@@ -48,6 +48,24 @@ html, body {
       border-radius: 2px;
       padding: 0 10px;
     }
+
+    .search-list > li > div:after {
+      font-family: "Material Icons";
+      height:40px;
+      color: grey;
+      vertical-align: middle;
+      display:inline-table;
+    }
+    .search-list > li > div[relation=friends]:after {
+      content: "done";
+      color: green;
+    }
+    .search-list > li > div[relation=none]:after {
+      content: "person_add";
+    }
+    .search-list > li > div[relation=self]:after {
+      content: "account_circle";
+    }
   }
 }
 
