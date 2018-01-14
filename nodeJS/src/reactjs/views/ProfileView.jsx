@@ -18,6 +18,7 @@ export default class ProfileView extends View {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     apiHandler.getProfileByUserName(this.props.match.params.username).then(result => {
       this.setState({
         profile: result
