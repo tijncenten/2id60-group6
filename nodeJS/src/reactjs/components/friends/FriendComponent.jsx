@@ -9,16 +9,15 @@ export default class FriendComponent extends React.Component {
   constructor(props){
     super(props);
 
-    this.deleteFriend = this.deleteFriend.bind(this);
+    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
   }
 
-  deleteFriend(){
-    this.deleteFriendDialog.show(this.props.profile.fullName);
+  handleDeleteOpen(name){
+    this.deleteFriendDialog.show(name);
   }
 
   render() {
     const { profile, isMyself } = this.props;
-    console.log(profile);
     const initials = profile.firstName[0] + profile.lastName[0];
     const fullName = `${profile.firstName} ${profile.lastName}`;
 
@@ -31,8 +30,8 @@ export default class FriendComponent extends React.Component {
         </div>
         {isMyself && (
           <span>
-            <Button icon primary className="friend-list-delete-button" onClick={this.deleteFriend}>delete</Button>
-            <DeleteFriendDialog ref={dialog => {this.deleteFriendDialog = dialog}} deleteFriend = {this.props.deleteFriend} id = {profile.id}/>
+            <Button icon primary className="friend-list-delete-button" onClick={() => {this.handleDeleteOpen(fullName)}}>delete</Button>
+            <DeleteFriendDialog ref={(dialog) => {this.deleteFriendDialog = dialog}} deleteFriend={this.props.deleteFriend} id={profile.id}/>
           </span>
         )}
       </Card>

@@ -43,7 +43,6 @@ export default class FriendList extends React.Component {
       return el.id == id;
     }), 1);
    this.setState({friends: newProfiles})
-
     // TODO: Send to backend
   }
 
