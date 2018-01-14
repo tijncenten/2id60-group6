@@ -5,17 +5,24 @@ import DeleteFriendDialog from './DeleteFriendDialog.jsx';
 
 export default class FriendComponent extends React.Component {
   render() {
-    const { profile, date, id } = this.props;
-
+    const { profile, isMyself } = this.props;
+    console.log(profile);
+    const initials = profile.firstName[0] + profile.lastName[0];
+    const fullName = `${profile.firstName} ${profile.lastName}`;
+    
     return (
       <Card className="md-block-centered friend-list-component">
-        <Avatar random className="friend-list-avatar">{profile.initials}</Avatar>
+        <Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar>
         <div className="friend-text">
-          <span ><strong>{profile.fullname}</strong></span>
-          <span>{date}</span>
+          <span ><strong>{fullName}</strong></span>
+          <span>{profile.date}</span>
         </div>
-        <Button icon primary className="friend-list-delete-button" onClick={this.deleteFriendDialog === undefined ? () => {} : () => {this.deleteFriendDialog.show(profile.fullname) }}>delete</Button>
-        <DeleteFriendDialog ref={dialog => {this.deleteFriendDialog = dialog}} deleteFriend = {this.props.deleteFriend} id = {id}/>
+        {isMyself && (
+          <span>
+            <Button icon primary className="friend-list-delete-button" onClick={this.deleteFriendDialog === undefined ? () => {} : () => {this.deleteFriendDialog.show(profile.fullName) }}>delete</Button>
+            <DeleteFriendDialog ref={dialog => {this.deleteFriendDialog = dialog}} deleteFriend = {this.props.deleteFriend} id = {profile.id}/>
+          </span>
+        )}        
       </Card>
     );
   }
@@ -23,5 +30,5 @@ export default class FriendComponent extends React.Component {
 
 FriendComponent.propTypes = {
   profile: PropTypes.object.isRequired,
-  date: PropTypes.string.isRequired,
+  isMyself: PropTypes.bool.isRequired,
 }

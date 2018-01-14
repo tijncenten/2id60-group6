@@ -17,6 +17,14 @@ export default new class {
     return parseProfilesSearch(result);
   }
 
+  async getFriendsByProfileId(id) {
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/profiles/${id}/friends`,
+    })
+    return parseProfiles(result);
+  }
+
   async getPosts() {
     const result = await jQuery.ajax({
       method: 'GET',
@@ -77,6 +85,12 @@ const parsePost = (post) => {
   post.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
   return post;
 };
+
+const parseProfiles = (profiles) => {
+  return profiles.map(profile => (
+    parseProfile(profile)
+  ));
+}
 
 const parseProfile = (profile) => {
   if(profile.firstName === undefined || profile.lastName === undefined){
