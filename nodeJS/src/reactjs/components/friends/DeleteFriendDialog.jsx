@@ -20,6 +20,8 @@ export default class DeleteFriendDialog extends React.Component {
       visible: true,
       fullname: name
     });
+    console.log("show functie")
+    console.log(name)
   }
 
   hide(){
@@ -51,7 +53,6 @@ export default class DeleteFriendDialog extends React.Component {
         title="Delete friend"
         onHide={this.hide}
         focusOnMount={false}
-        dialogClassName="moeternoguitmiss-dialog"
         modal
         actions={actions} >
         <p> Are you sure that you want to delete <strong>{this.state.fullname}</strong> from your friend list?</p>

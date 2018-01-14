@@ -39,6 +39,7 @@ $profile-margin-between-elements: 20px;
 
       .md-card-title {
         padding-bottom: 0;
+        display: inline-block;
 
         .md-text {
           margin: 0 auto;
@@ -127,4 +128,8 @@ $profile-margin-between-elements: 20px;
       }
     }
   }
+}
+
+.edit-profile-dialog {
+  width:400px;
 }

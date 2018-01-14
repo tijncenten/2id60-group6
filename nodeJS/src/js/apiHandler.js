@@ -102,7 +102,12 @@ const parsePost = (post) => {
   post.owner = parseProfile(post.owner);
   post.placedOnProfile = parseProfile(post.placedOnProfile);
   const date = new Date(post.date);
-  post.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+  const hours = (date.getHours() === 0) ? "00" : date.getHours();
+  const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+  post.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
+  if(post.postType === "shared"){
+    post.sharedPost = parsePost(post.sharedPost);
+  }
   return post;
 };
 
