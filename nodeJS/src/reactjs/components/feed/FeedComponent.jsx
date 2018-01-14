@@ -13,8 +13,14 @@ class FeedComponent extends React.Component {
     this.state = {
       liked: this.props.data.liked,
       likes: this.props.data.likes,
+      commentDialog: "unset",
     }
+
+
+
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
+    this.handleCommentOpen = this.handleCommentOpen.bind(this);
+    this.handleShareOpen = this.handleShareOpen.bind(this);
   }
 
   handleLikeToggle() {
@@ -29,6 +35,14 @@ class FeedComponent extends React.Component {
     this.setState({
       liked: !this.state.liked
     });
+  }
+
+  handleCommentOpen() {
+    this.commentDialog.show();
+  }
+
+  handleShareOpen() {
+    this.shareDialog.show();
   }
 
   render() {
@@ -56,11 +70,11 @@ class FeedComponent extends React.Component {
           <div className="number-of-likes">
             {likes > 0 ? likes : ""}
           </div>
-          <Button icon primary onClick={this.commentDialog === undefined ? () => {} : this.commentDialog.show}>comment</Button>
-          <Button icon primary onClick={this.shareDialog === undefined ? () => {} : this.shareDialog.show}>share</Button>
+          <Button icon primary onClick={this.handleCommentOpen}>comment</Button>
+          <Button icon primary onClick={this.handleShareOpen}>comment</Button>
         </CardActions>
-        <CommentDialog ref={dialog => {this.commentDialog = dialog}}/>
-        <ShareDialog ref={dialog => {this.shareDialog = dialog}}/>
+        <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}}/>
+        <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}}/>
       </Card>
     );
   }
