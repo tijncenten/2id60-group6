@@ -1,5 +1,6 @@
 import React from 'react';
 import { Paper, Avatar, Button, FontIcon } from 'react-md';
+import { NavLink } from 'react-router-dom';
 
 class CommentComponent extends React.Component {
 
@@ -17,19 +18,14 @@ class CommentComponent extends React.Component {
   handleLikeToggle() {
 
     if (this.state.liked) {
-
       // Substract a like
       this.state.likes -= 1;
       // TODO send to backend
-
     } else {
-
       // Add a like
       this.state.likes += 1;
       // TODO: send to backend
-
     }
-
     // Toggle icon
     this.setState({
       liked: !this.state.liked
@@ -39,11 +35,13 @@ class CommentComponent extends React.Component {
   render() {
     return (
       <div>
-        <Avatar random className="comment-avatar">{this.props.username.substring(0,2)}</Avatar>
+        <NavLink to={`/profile/${this.props.username}`}>
+          <Avatar random className="comment-avatar">{this.props.username.substring(0,2)}</Avatar>
+        </NavLink>
         <div className="md-paper md-paper--1 chat-message comment-message">
           <div>
-            <strong>{this.props.username}  </strong>
-            {this.props.message}
+            <NavLink className="link-styling" to={`/profile/${this.props.username}`}>{this.props.username}</NavLink>
+            {" " + this.props.message}
           </div>
           <div className="comment-info-wrapper d-flex">
             <div className="comment-date">

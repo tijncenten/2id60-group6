@@ -103,6 +103,9 @@ const parsePost = (post) => {
   post.placedOnProfile = parseProfile(post.placedOnProfile);
   const date = new Date(post.date);
   post.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+  if(post.postType === "shared"){
+    post.sharedPost = parsePost(post.sharedPost);
+  }
   return post;
 };
 

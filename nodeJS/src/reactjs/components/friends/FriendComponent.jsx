@@ -15,7 +15,7 @@ export default class FriendComponent extends React.Component {
       <Card className="md-block-centered friend-list-component">
         <NavLink to={`/profile/${profile.username}`}><Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar></NavLink>
         <div className="friend-text">
-          <NavLink className="link-no-styling" to={`/profile/${profile.username}`}><strong>{fullName}</strong></NavLink>
+          <NavLink className="link-styling" to={`/profile/${profile.username}`}>{fullName}</NavLink>
           <span>{profile.date}</span>
         </div>
         {isMyself && (
