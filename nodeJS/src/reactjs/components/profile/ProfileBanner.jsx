@@ -10,6 +10,12 @@ export default class ProfileBanner extends React.Component {
     this.state = {
       profile: this.props.profile,
     }
+
+    this.handleEditDialogOpen = this.handleEditDialogOpen.bind(this);
+  }
+
+  handleEditDialogOpen() {
+    this.editProfileDialog.show();
   }
   render() {
     const { profile } = this.state;
@@ -19,7 +25,7 @@ export default class ProfileBanner extends React.Component {
     if(profile.relation.type === "self") {
       actions = (
         <span>
-          <Button raised secondary onClick={this.editProfileDialog === undefined ? () => {} : this.editProfileDialog.show}>Edit Profile</Button>
+          <Button raised secondary onClick={this.handleEditDialogOpen}>Edit Profile</Button>
         </span>
       )
     } else {
@@ -55,7 +61,7 @@ export default class ProfileBanner extends React.Component {
                 <Button raised primary>friends <span className="profile-banner-number-of-friends">{profile.friendCount}</span></Button>
               </NavLink>
             </CardActions>
-            <EditProfileDialog ref={dialog => {this.editProfileDialog = dialog}}/>
+            <EditProfileDialog ref={(dialog) => {this.editProfileDialog = dialog}}/>
           </div>
         </div>
       </div>
