@@ -13,9 +13,9 @@ from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status, generics, permissions, serializers
-from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly
+from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly, IsMeOrReadOnly
 from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost, PostLike
-from .serializers import ProfileSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer
+from .serializers import ProfileSerializer, ProfileDetailSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer
 from .forms import SignUpForm
 
 # Create your views here.
@@ -69,12 +69,13 @@ class ProfileList(generics.ListAPIView):
                 raise serializers.ValidationError({'nr': 'This parameter needs to be an integer'})
         return queryset
 
-class ProfileDetail(generics.RetrieveAPIView):
+class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
     Return details about a profile with id
     """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsMeOrReadOnly)
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileDetailSerializer
 
     def get_object(self):
         if self.kwargs['pk'] == 'me':

@@ -44,3 +44,15 @@ class IsOwnerOrReadOnly(OrReadOnlyMixin, IsOwner):
 
 class IsPostOwnerOrReadOnly(OrReadOnlyMixin, IsPostOwner):
     pass
+
+class IsMe(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if obj == request.user.profile:
+            return True
+        return False
+
+class IsMeOrReadOnly(IsMe):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return super().has_object_permission(request, view, obj)
