@@ -53,7 +53,7 @@ const navItems = [{
     icon: 'settings',
     component: SettingsView,
   },
-]; 
+];
 
 class AppRouter extends React.Component {
   constructor(props) {
@@ -111,7 +111,7 @@ class AppRouter extends React.Component {
         drawerTitle="Menu"
         toolbarTitle={title}
         toolbarActions={
-          <ProfileMenu />
+          <ProfileMenu className='profile-menu' />
         }
         navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
