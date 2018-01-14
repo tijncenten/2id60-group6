@@ -49,6 +49,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('id', 'username', 'firstName', 'lastName', 'email', 'relation', 'friendCount')
 
+class ProfileDetailSerializer(ProfileSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'bio', 'relation', 'friendCount')
+
 class FriendSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='friend.id')
     username = serializers.ReadOnlyField(source='friend.user.username')

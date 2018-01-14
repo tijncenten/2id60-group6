@@ -9,6 +9,7 @@ from django.dispatch import receiver
 class Profile(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='profile')
     friends = models.ManyToManyField('self', through='Friendship', symmetrical=False, related_name='friends+')
+    bio = models.CharField(max_length=254, default='')
 
     def __str__(self):
         return self.user.username
