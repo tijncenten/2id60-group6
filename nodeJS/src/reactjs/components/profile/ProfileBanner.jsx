@@ -1,6 +1,7 @@
 import React from 'react';
 import { Paper, Card, CardTitle, CardText, Avatar, CardActions, Button } from 'react-md';
 import { NavLink } from 'react-router-dom'
+import EditProfileDialog from './EditProfileDialog.jsx';
 
 export default class ProfileBanner extends React.Component {
   constructor(props){
@@ -17,7 +18,9 @@ export default class ProfileBanner extends React.Component {
     let actions;
     if(profile.relation.type === "self") {
       actions = (
-        <Button raised secondary>Edit Profile</Button>
+        <span>
+          <Button raised secondary onClick={this.editProfileDialog === undefined ? () => {} : this.editProfileDialog.show}>Edit Profile</Button>
+        </span>
       )
     } else {
       actions = (
@@ -52,6 +55,7 @@ export default class ProfileBanner extends React.Component {
                 <Button raised primary>friends <span className="profile-banner-number-of-friends">{profile.friendCount}</span></Button>
               </NavLink>
             </CardActions>
+            <EditProfileDialog ref={dialog => {this.editProfileDialog = dialog}}/>
           </div>
         </div>
       </div>
