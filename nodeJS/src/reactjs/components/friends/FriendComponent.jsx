@@ -5,7 +5,6 @@ import { NavLink } from 'react-router-dom';
 import DeleteFriendDialog from './DeleteFriendDialog.jsx';
 
 export default class FriendComponent extends React.Component {
-
   constructor(props){
     super(props);
 
