@@ -13,15 +13,13 @@ export default class FriendComponent extends React.Component {
 
   handleDeleteOpen(name){
     this.deleteFriendDialog.show(name);
-    console.log("handle delete")
-    console.log(name);
   }
 
   render() {
     const { profile, isMyself } = this.props;
     const initials = profile.firstName[0] + profile.lastName[0];
     const fullName = `${profile.firstName} ${profile.lastName}`;
-    
+
     return (
       <Card className="md-block-centered friend-list-component">
         <NavLink to={`/profile/${profile.username}`}><Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar></NavLink>
@@ -34,7 +32,7 @@ export default class FriendComponent extends React.Component {
             <Button icon primary className="friend-list-delete-button" onClick={() => {this.handleDeleteOpen(fullName)}}>delete</Button>
             <DeleteFriendDialog ref={(dialog) => {this.deleteFriendDialog = dialog}} deleteFriend={this.props.deleteFriend} id={profile.id}/>
           </span>
-        )}        
+        )}
       </Card>
     );
   }
