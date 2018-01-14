@@ -179,7 +179,7 @@ class FriendRequestAccept(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            friendRequest = FriendRequest.objects.get(sender__id=kwargs['fk'])
+            friendRequest = FriendRequest.objects.get(sender__id=kwargs['fk'], receiver=request.user.profile)
             friendRequest.delete()
             sender = friendRequest.sender
             receiver = friendRequest.receiver
