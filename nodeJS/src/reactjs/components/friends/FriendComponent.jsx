@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Card, CardTitle, Button } from 'react-md';
+import { NavLink } from 'react-router-dom';
 import DeleteFriendDialog from './DeleteFriendDialog.jsx';
 
 export default class FriendComponent extends React.Component {
@@ -12,9 +13,9 @@ export default class FriendComponent extends React.Component {
     
     return (
       <Card className="md-block-centered friend-list-component">
-        <Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar>
+        <NavLink to={`/profile/${profile.username}`}><Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar></NavLink>
         <div className="friend-text">
-          <span ><strong>{fullName}</strong></span>
+          <NavLink className="link-no-styling" to={`/profile/${profile.username}`}><strong>{fullName}</strong></NavLink>
           <span>{profile.date}</span>
         </div>
         {isMyself && (

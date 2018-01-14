@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Button, Card, CardTitle, CardText, CardActions } from 'react-md';
+import { NavLink } from 'react-router-dom'
 import CommentDialog from '../comments/CommentDialog.jsx';
 import ShareDialog from './ShareDialog.jsx';
 import apiHandler from '../../../js/apiHandler';
@@ -38,9 +39,9 @@ class FeedComponent extends React.Component {
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
-          title={owner.firstName + " " + owner.lastName}
+          title={<NavLink className="link-no-styling" to={`/profile/${owner.username}`}><strong>{owner.firstName + " " + owner.lastName}</strong></NavLink>}
           subtitle={date}
-          avatar={<Avatar suffix={owner.avatarColor}>{initials}</Avatar>}>
+          avatar={<NavLink to={`/profile/${owner.username}`}><Avatar suffix={owner.avatarColor}>{initials}</Avatar></NavLink>}>
         </CardTitle>
         <CardText>
           {(content !== null || content !== "") && (
