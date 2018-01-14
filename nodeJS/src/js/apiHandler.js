@@ -69,7 +69,7 @@ export default new class {
       data: {
         csrfmiddlewaretoken: csrf_token,
       }
-    })
+    });
   }
 
   async postUnlike(id) {
@@ -79,7 +79,17 @@ export default new class {
       headers: {
         "X-CSRFTOKEN": csrf_token,
       }
-    })
+    });
+  }
+
+  async friendDelete(id, fk) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/profiles/${id}/friends/${fk}/`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
   }
 }
 
@@ -133,7 +143,7 @@ const parseProfilesSearch = (profiles) => {
     fullname: `${profile.firstName} ${profile.lastName}`,
     username: profile.username,
     relation: profile.relation.type,
-  }));  
+  }));
 }
 
 activeUser = parseProfile(activeUser);
