@@ -8,6 +8,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     lastName = serializers.ReadOnlyField(source='user.last_name')
     email = serializers.ReadOnlyField(source='user.email')
     relation = serializers.SerializerMethodField()
+    friendCount = serializers.SerializerMethodField()
 
     def get_relation(self, obj):
         if self.context['request'].user.is_authenticated():
@@ -41,9 +42,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         result = {'type': 'none'}
         return result
 
+    def get_friendCount(self, obj):
+        return obj.get_friends().count()
+
     class Meta:
         model = Profile
-        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'relation')
+        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'relation', 'friendCount')
 
 class FriendSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='friend.id')
