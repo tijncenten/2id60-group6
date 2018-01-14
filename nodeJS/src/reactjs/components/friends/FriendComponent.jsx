@@ -5,12 +5,23 @@ import { NavLink } from 'react-router-dom';
 import DeleteFriendDialog from './DeleteFriendDialog.jsx';
 
 export default class FriendComponent extends React.Component {
+
+  constructor(props){
+    super(props);
+
+    this.deleteFriend = this.deleteFriend.bind(this);
+  }
+
+  deleteFriend(){
+    this.deleteFriendDialog.show(this.props.profile.fullName);
+  }
+
   render() {
     const { profile, isMyself } = this.props;
     console.log(profile);
     const initials = profile.firstName[0] + profile.lastName[0];
     const fullName = `${profile.firstName} ${profile.lastName}`;
-    
+
     return (
       <Card className="md-block-centered friend-list-component">
         <NavLink to={`/profile/${profile.username}`}><Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar></NavLink>
@@ -20,10 +31,10 @@ export default class FriendComponent extends React.Component {
         </div>
         {isMyself && (
           <span>
-            <Button icon primary className="friend-list-delete-button" onClick={this.deleteFriendDialog === undefined ? () => {} : () => {this.deleteFriendDialog.show(profile.fullName) }}>delete</Button>
+            <Button icon primary className="friend-list-delete-button" onClick={this.deleteFriend}>delete</Button>
             <DeleteFriendDialog ref={dialog => {this.deleteFriendDialog = dialog}} deleteFriend = {this.props.deleteFriend} id = {profile.id}/>
           </span>
-        )}        
+        )}
       </Card>
     );
   }

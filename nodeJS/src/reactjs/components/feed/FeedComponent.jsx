@@ -55,7 +55,7 @@ class FeedComponent extends React.Component {
         {owner.firstName + " " + owner.lastName}
       </NavLink>
     )
-    
+
     let sharedContent;
     if (postType === "shared"){
       const sharedPost = this.props.data.sharedPost;
@@ -73,7 +73,7 @@ class FeedComponent extends React.Component {
       sharedContent = (
         <SharedFeedComponent sharedPost={sharedPost}/>
       );
-    } 
+    }
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
@@ -93,7 +93,7 @@ class FeedComponent extends React.Component {
             {likes > 0 ? likes : ""}
           </div>
           <Button icon primary onClick={this.handleCommentOpen}>comment</Button>
-          <Button icon primary onClick={this.handleShareOpen}>comment</Button>
+          <Button icon primary onClick={this.handleShareOpen}>share</Button>
         </CardActions>
         <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}}/>
         <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}}/>

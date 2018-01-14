@@ -10,7 +10,14 @@ export default class ProfileBanner extends React.Component {
     this.state = {
       profile: this.props.profile,
     }
+
+    this.editProfile = this.editProfile.bind(this);
   }
+
+  editProfile() {
+    this.editProfileDialog.show
+  }
+
   render() {
     const { profile } = this.state;
     const fullname = `${profile.firstName} ${profile.lastName}`;
@@ -19,7 +26,7 @@ export default class ProfileBanner extends React.Component {
     if(profile.relation.type === "self") {
       actions = (
         <span>
-          <Button raised secondary onClick={this.editProfileDialog === undefined ? () => {} : this.editProfileDialog.show}>Edit Profile</Button>
+          <Button raised secondary onClick={this.editProfile}>Edit Profile</Button>
         </span>
       )
     } else {
@@ -35,7 +42,7 @@ export default class ProfileBanner extends React.Component {
         <div className="profile-banner-inner">
           <Avatar src="/static/images/ER-Diagram-Database.png" className="profile-banner-picture"/>
           <div className="profile-banner-info">
-            <NavLink to={`/profile/${profile.username}`}> 
+            <NavLink to={`/profile/${profile.username}`}>
               <CardTitle title={fullname}/>
             </NavLink>
             <CardText >
@@ -51,7 +58,7 @@ export default class ProfileBanner extends React.Component {
             <Avatar src="/static/images/ER-Diagram-Database.png"/>
             <Avatar src="/static/images/ER-Diagram-Database.png"/>
             <CardActions className="profile-banner-friends-button">
-              <NavLink to={`/profile/${profile.username}/friends`}> 
+              <NavLink to={`/profile/${profile.username}/friends`}>
                 <Button raised primary>friends <span className="profile-banner-number-of-friends">{profile.friendCount}</span></Button>
               </NavLink>
             </CardActions>

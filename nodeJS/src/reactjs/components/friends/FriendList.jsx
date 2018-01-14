@@ -38,11 +38,11 @@ export default class FriendList extends React.Component {
   deleteFriend(id) {
     // Remove the friend matching the given id from the list
 
-    var newProfiles = this.state.profiles;
-    newProfiles.splice(this.state.profiles.findIndex(function(el){
+    var newProfiles = this.state.friends;
+    newProfiles.splice(this.state.friends.findIndex(function(el){
       return el.id == id;
     }), 1);
-   this.setState({profiles: newProfiles})
+   this.setState({friends: newProfiles})
 
     // TODO: Send to backend
   }
