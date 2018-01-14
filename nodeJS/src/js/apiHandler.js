@@ -61,6 +61,26 @@ export default new class {
     });
     return parsePost(result);
   }
+
+  async postLike(id) {
+    await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${id}/likes`,
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+      }
+    })
+  }
+
+  async postUnlike(id) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${id}/likes`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
 }
 
 const parsePosts = (posts) => {

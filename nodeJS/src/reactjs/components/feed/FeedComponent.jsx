@@ -3,27 +3,26 @@ import PropTypes from 'prop-types';
 import { Avatar, Button, Card, CardTitle, CardText, CardActions } from 'react-md';
 import CommentDialog from '../comments/CommentDialog.jsx';
 import ShareDialog from './ShareDialog.jsx';
+import apiHandler from '../../../js/apiHandler';
 
 class FeedComponent extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      liked: true,
-      likes: 7,
+      liked: this.props.data.liked,
+      likes: this.props.data.likes,
     }
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
   handleLikeToggle() {
     if (this.state.liked) {
-      // Substract a like
       this.state.likes -= 1;
-      // TODO send to backend
+      apiHandler.postUnlike(this.props.data.id);
     } else {
-      // Add a like
       this.state.likes += 1;
-      // TODO: send to backend
+      apiHandler.postLike(this.props.data.id);
     }
 
     this.setState({
