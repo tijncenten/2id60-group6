@@ -84,7 +84,7 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
         return super().get_object()
 
     def put(self, request, *args, **kwargs):
-        
+
         return self.update(request, *args, **kwargs)
 
 class ProfileDetailUsername(ProfileDetail):
@@ -227,7 +227,7 @@ class PostCreate(generics.ListCreateAPIView):
     queryset = NewPost.objects.all()
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.request and self.request.method == 'POST':
             return NewPostCreateSerializer
         return NewPostSerializer
 
