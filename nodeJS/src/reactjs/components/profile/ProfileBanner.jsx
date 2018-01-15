@@ -3,6 +3,7 @@ import { Paper, Card, CardTitle, CardText, Avatar, CardActions, Button } from 'r
 import { NavLink } from 'react-router-dom'
 import EditProfileDialog from './EditProfileDialog.jsx';
 import apiHandler from '../../../js/apiHandler';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 export default class ProfileBanner extends React.Component {
   constructor(props){
@@ -67,16 +68,34 @@ export default class ProfileBanner extends React.Component {
         </span>
       )
     }
+    let avatar;
+    if(profile.profilePicture === null){
+      avatar = (
+        <Avatar suffix={profile.avatarColor} className="profile-banner-picture">{profile.firstName[0] + profile.lastName[0]}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar src={profilePictureParser.parseNormal(profile.profilePicture)} className="profile-banner-picture"/>
+      );
+    }
+    let bio;
+    if(profile.bio === "" && profile.id == activeUser.id){
+      bio = "-You currently have no bio, you can add one by clicking on the 'Edit Profile' button.";
+    } else if (profile.bio === "") {
+      bio = "-This person doesn't have a bio.";
+    } else {
+      bio = "-" + profile.bio;
+    }
     return(
       <div className="md-paper md-paper--1 profile-banner">
         <div className="profile-banner-inner">
-          <Avatar src="/static/images/ER-Diagram-Database.png" className="profile-banner-picture"/>
+          {avatar}
           <div className="profile-banner-info">
             <NavLink to={`/profile/${profile.username}`}>
               <CardTitle title={fullname}/>
             </NavLink>
             <CardText >
-              <p> -Hi, I'm a person that really likes pizza! cheers!</p>
+              <p>{bio}</p>
             </CardText>
             <CardActions className="profile-banner-buttons">
               {actions}
