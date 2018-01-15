@@ -50,12 +50,18 @@ export default class Feed extends React.Component {
   }
 
   sharePost(id, message) {
+    const createPostCallback = (post) => {
+      this.setState({
+        posts: [post].concat(this.state.posts)
+      });
+    };
+
     var post = this.state.posts.find(function(el) {
       return el.id == id;
     });
 
     if (!(post === null || post === undefined)) {
-        apiHandler.postShare(id, message, post.location);
+        apiHandler.postShare(id, message, post.location).then(createPostCallback);
     }
   }
 

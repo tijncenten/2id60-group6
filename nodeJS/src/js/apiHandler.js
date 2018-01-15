@@ -206,7 +206,7 @@ export default new class {
   }
 
   async postShare(id, content, location) {
-    await jQuery.ajax({
+    const result = await jQuery.ajax({
       method: 'POST',
       url: `/api/posts/${id}/share`,
       headers: {
@@ -217,6 +217,7 @@ export default new class {
         location: location,
       }
     })
+    return parsePost(result);
   }
 }
 
