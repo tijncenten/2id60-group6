@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import Profile, FriendRequest, Post
+from .models import Profile, FriendRequest, Post, Comment
 from . import views
 
 class IsOwner(permissions.BasePermission):
@@ -28,6 +28,12 @@ class IsPostOwner(permissions.BasePermission):
             return obj.owner.user == request.user
         return False
 
+class IsCommentOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if isinstance(obj, Comment):
+            return obj.profile.user == request.user
+        return False
+
 class OrReadOnlyMixin(object):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
@@ -43,6 +49,9 @@ class IsOwnerOrReadOnly(OrReadOnlyMixin, IsOwner):
     pass
 
 class IsPostOwnerOrReadOnly(OrReadOnlyMixin, IsPostOwner):
+    pass
+
+class IsCommentOwnerOrReadOnly(OrReadOnlyMixin, IsCommentOwner):
     pass
 
 class IsMe(permissions.BasePermission):
