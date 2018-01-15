@@ -6,7 +6,7 @@ export default class ShareDialog extends React.Component {
     super(props);
 
     this.state = {
-      visible: false
+      visible: false,
     };
 
     this.show = this.show.bind(this);
@@ -24,7 +24,6 @@ export default class ShareDialog extends React.Component {
 
   handleShare(){
     this.hide();
-
     this.props.sharePost(this.props.data.id, this.message.value);
   }
 

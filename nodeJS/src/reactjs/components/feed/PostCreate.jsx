@@ -9,11 +9,11 @@ class PostCreate extends React.Component {
     if(activeUser.profilePicture === null){
       const initials = (activeUser.firstName[0] + activeUser.lastName[0]).toUpperCase();
       avatar = (
-        <Avatar suffix={activeUser.avatarColor}>{initials}</Avatar>
+        <Avatar className="post-avatar" suffix={activeUser.avatarColor}>{initials}</Avatar>
       );
     } else {
       avatar = (
-        <Avatar src={profilePictureParser.parseThumb(activeUser.profilePicture)}/>
+        <Avatar className="post-avatar" src={profilePictureParser.parseThumb(activeUser.profilePicture)}/>
       );
     }
 
