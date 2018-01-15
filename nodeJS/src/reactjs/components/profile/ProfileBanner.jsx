@@ -112,7 +112,8 @@ export default class ProfileBanner extends React.Component {
               </NavLink>
             </CardActions>
             <EditProfileDialog ref={(dialog) => {this.editProfileDialog = dialog}}
-              profile={profile} />
+              profile={profile}
+              update={this.props.update} />
           </div>
         </div>
       </div>
