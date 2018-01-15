@@ -140,6 +140,26 @@ export default new class {
     return parsePost(result);
   }
 
+  async getComments(id) {
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/posts/${id}/comments`,
+    });
+    return parseComments(result);
+  }
+
+  async createComment(postId, content) {
+    const result = await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${postId}/comments`,
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+        content: content,
+      }
+    });
+    return parseComment(result);
+  }
+
   async postLike(id) {
     await jQuery.ajax({
       method: 'POST',
@@ -160,7 +180,27 @@ export default new class {
     });
   }
 
-  async postDelete(id) {
+  async commentLike(postId, commentId) {
+    await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${postId}/comments/${commentId}/likes`,
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+      }
+    });
+  }
+
+  async commentUnlike(postId, commentId) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${postId}/comments/${commentId}/likes`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+  }
+
+  async commentDelete(id) {
     await jQuery.ajax({
       method: 'DELETE',
       url: `/api/posts/${id}`,
@@ -213,6 +253,24 @@ const parsePost = (post) => {
   return post;
 };
 
+const parseComments = (comments) => {
+  return comments.map(comment => (
+    parseComment(comment)
+  ));
+}
+
+const parseComment = (comment) => {
+  if(comment.profile == 'self'){
+    comment.profile = activeUser;
+  }
+  comment.profile = parseProfile(comment.profile);
+  const date = new Date(comment.date);
+  const hours = (date.getHours() === 0) ? "00" : date.getHours();
+  const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+  comment.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
+  return comment;
+}
+
 const parseProfiles = (profiles) => {
   return profiles.map(profile => (
     parseProfile(profile)
@@ -236,7 +294,7 @@ const parseProfilesSearch = (profiles) => {
     username: profile.username,
     relation: profile.relation.type,
     requesttype: profile.relation.requestType,
-  }));  
+  }));
 }
 
 const parseFriendRequests = (requests) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Paper, Avatar, Button, FontIcon } from 'react-md';
 import { NavLink } from 'react-router-dom';
+import apiHandler from '../../../js/apiHandler';
 
 class CommentComponent extends React.Component {
 
@@ -8,44 +9,43 @@ class CommentComponent extends React.Component {
     super(props);
 
     this.state = {
-      liked: props.liked,
-      likes: props.likes
+      liked: props.data.liked,
+      likes: props.data.likes
     }
 
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
   handleLikeToggle() {
-
     if (this.state.liked) {
-      // Substract a like
       this.state.likes -= 1;
-      // TODO send to backend
+      apiHandler.commentUnlike(this.props.postId, this.props.data.id);
     } else {
-      // Add a like
       this.state.likes += 1;
-      // TODO: send to backend
+      apiHandler.commentLike(this.props.postId, this.props.data.id);
     }
-    // Toggle icon
+
     this.setState({
       liked: !this.state.liked
     });
   }
 
   render() {
+    const { profile, content, date } = this.props.data;
+
     return (
       <div>
-        <NavLink to={`/profile/${this.props.username}`}>
-          <Avatar random className="comment-avatar">{this.props.username.substring(0,2)}</Avatar>
+        <NavLink to={`/profile/${profile.username}`}>
+          <Avatar random className="comment-avatar">{profile.firstName.substring(0,1) + profile.lastName.substring(0,1)}</Avatar>
         </NavLink>
         <div className="md-paper md-paper--1 chat-message comment-message">
           <div>
-            <NavLink className="link-styling" to={`/profile/${this.props.username}`}>{this.props.username}</NavLink>
-            {" " + this.props.message}
+            <NavLink className="link-styling" to={`/profile/${profile.username}`}>{profile.username}</NavLink>
+            {" " + content}
           </div>
           <div className="comment-info-wrapper d-flex">
             <div className="comment-date">
-              {this.props.date}
+              {date}
             </div>
             <div className="inline-block">
               <Button icon secondary swapTheming={this.state.liked} onClick={this.handleLikeToggle}>thumb_up</Button>
