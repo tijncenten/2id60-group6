@@ -27,9 +27,9 @@ export default class EditProfileDialog extends React.Component {
     this.setState({ visible: false });
   }
 
-  handleLoad(name, size) {
+  handleLoad(files, e) {
     this.setState({
-      fileName: name
+      fileName: files.name
     });
   }
 
@@ -39,6 +39,7 @@ export default class EditProfileDialog extends React.Component {
     let bio = document.getElementById('profile-bio-input');
     let picture = document.getElementById('profile-picture-input');
     let pictureFile = picture.files[0];
+    console.log(pictureFile);
     apiHandler.setProfileInformation(bio.value, pictureFile).then(this.hide);
   }
 
@@ -74,7 +75,7 @@ export default class EditProfileDialog extends React.Component {
             maxLength={254}/>
           <h4>Upload profile picture:</h4>
           <FileInput id="profile-picture-input"
-            onLoad={this.handleLoad}
+            onChange={this.handleLoad}
             accept="image/*"
             name="profilePicture"
             primary />
@@ -82,7 +83,8 @@ export default class EditProfileDialog extends React.Component {
             placeholder="No file chosen"
             value={this.state.fileName}
             readOnly
-            fullWidth={false} />
+            fullWidth={false} 
+            className="profile-picture-file-textfield"/>
         </DialogContainer>
       </form>
     );

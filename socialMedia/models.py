@@ -33,7 +33,17 @@ class Profile(models.Model):
         self.__original_profile_picture = self.profilePicture.name
 
     def save(self, *args, **kwargs):
+        try:
+            this = Profile.objects.get(id=self.id)
+            if this.profilePicture != self.profilePicture:
+                this.profilePicture.delete()
+                this.profilePictureNormal.delete()
+                this.profilePictureSmall.delete()
+                this.profilePictureThumb.delete()
+        except: pass
+
         if self.profilePicture and self.profilePicture.name != self.__original_profile_picture:
+            fileName = 'profile-picture'
             #Large profile picture
             img = Image.open(self.profilePicture)
             if img.mode in ('RGBA', 'LA'):
@@ -45,7 +55,7 @@ class Profile(models.Model):
             img.thumbnail((800, 800), Image.ANTIALIAS)
             img.save(output, format='JPEG', quality=100)
             output.seek(0)
-            self.profilePicture = InMemoryUploadedFile(output, 'profilePicture', "%s.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+            self.profilePicture = InMemoryUploadedFile(output, 'profilePicture', "%s.jpg" % fileName, 'image/jpeg', sys.getsizeof(output), None)
 
             width, height = img.size
             left = 0
@@ -69,21 +79,21 @@ class Profile(models.Model):
             img.thumbnail((200, 200), Image.ANTIALIAS)
             img.save(output, format='JPEG', quality=100)
             output.seek(0)
-            self.profilePictureNormal = InMemoryUploadedFile(output, 'profilePictureNormal', "%s-normal.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+            self.profilePictureNormal = InMemoryUploadedFile(output, 'profilePictureNormal', "%s-normal.jpg" % fileName, 'image/jpeg', sys.getsizeof(output), None)
 
             #Small profile picture
             output = BytesIO()
             img.thumbnail((100, 100), Image.ANTIALIAS)
             img.save(output, format='JPEG', quality=100)
             output.seek(0)
-            self.profilePictureSmall = InMemoryUploadedFile(output, 'profilePictureSmall', "%s-small.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+            self.profilePictureSmall = InMemoryUploadedFile(output, 'profilePictureSmall', "%s-small.jpg" % fileName, 'image/jpeg', sys.getsizeof(output), None)
 
             #Thumb profile picture
             output = BytesIO()
             img.thumbnail((40, 40), Image.ANTIALIAS)
             img.save(output, format='JPEG', quality=100)
             output.seek(0)
-            self.profilePictureThumb = InMemoryUploadedFile(output, 'profilePictureThumb', "%s-thumb.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
+            self.profilePictureThumb = InMemoryUploadedFile(output, 'profilePictureThumb', "%s-thumb.jpg" % fileName, 'image/jpeg', sys.getsizeof(output), None)
         super(Profile, self).save(*args, **kwargs)
         self.__original_profile_picture = self.profilePicture.name
 
