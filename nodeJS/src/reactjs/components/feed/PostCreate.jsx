@@ -7,7 +7,7 @@ class PostCreate extends React.Component {
   render() {
     let avatar;
     if(activeUser.profilePicture === null){
-      const initials = (owner.firstName[0] + owner.lastName[0]).toUpperCase();
+      const initials = (activeUser.firstName[0] + activeUser.lastName[0]).toUpperCase();
       avatar = (
         <Avatar suffix={activeUser.avatarColor}>{initials}</Avatar>
       );
