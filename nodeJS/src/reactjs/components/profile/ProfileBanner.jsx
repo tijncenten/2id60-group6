@@ -92,7 +92,8 @@ export default class ProfileBanner extends React.Component {
                 <Button raised primary>friends <span className="profile-banner-number-of-friends">{profile.friendCount}</span></Button>
               </NavLink>
             </CardActions>
-            <EditProfileDialog ref={(dialog) => {this.editProfileDialog = dialog}}/>
+            <EditProfileDialog ref={(dialog) => {this.editProfileDialog = dialog}}
+              profile={profile} />
           </div>
         </div>
       </div>

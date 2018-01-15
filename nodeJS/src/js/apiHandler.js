@@ -9,6 +9,32 @@ export default new class {
     return parseProfile(result);
   }
 
+  async setProfileInformation(bio, pictureUri = null) {
+    if(bio === null && pictureUri === null) {
+      return;
+    }
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrf_token);
+    if(bio !== null) {
+      formData.append('bio', bio);
+    }
+    if(pictureUri !== null) {
+      formData.append('profilePicture', pictureUri);
+    }
+
+    return await jQuery.ajax({
+      method: 'PATCH',
+      url: `/api/profiles/me`,
+      data: formData,
+      processData: false,
+      contentType: false,
+      headers: {
+        "Accept": "application/json",
+        "X-CSRFTOKEN": csrf_token,
+      },
+    });
+  }
+
   async getProfileBySearch(search, maximum){
     const result = await jQuery.ajax({
       method: 'GET',
@@ -121,13 +147,23 @@ export default new class {
       data: {
         csrfmiddlewaretoken: csrf_token,
       }
-    })
+    });
   }
 
   async postUnlike(id) {
     await jQuery.ajax({
       method: 'DELETE',
       url: `/api/posts/${id}/likes`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+  }
+
+  async postDelete(id) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${id}`,
       headers: {
         "X-CSRFTOKEN": csrf_token,
       }

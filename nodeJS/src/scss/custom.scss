@@ -102,6 +102,14 @@ html, body {
   }
 }
 
+.md-toolbar--action-right {
+  display: flex;
+
+  .md-menu-container {
+    display: flex;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .title-toolbar .toolbar-title-text {
     display: initial;

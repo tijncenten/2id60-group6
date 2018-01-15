@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, FriendRequest, Friendship, Post, SharedPost, NewPost, Like, PostLike, CommentLike
+from .models import Profile, FriendRequest, Friendship, Post, SharedPost, NewPost, Like, PostLike, CommentLike, Comment
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -51,7 +51,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'firstName', 'lastName', 'email', 'profilePicture', 'relation', 'friendCount')
 
 class ProfileDetailSerializer(ProfileSerializer):
-    profilePicture = serializers.ImageField()
+    profilePicture = serializers.ImageField(required=False)
 
     class Meta:
         model = Profile
@@ -148,7 +148,6 @@ class SharedPostSerializer(PostLikedMixin, PostSubClassProfilesMixin, serializer
 
     sharedPost = NewPostSerializer(read_only=True)
 
-
     def get_postType(self, obj):
         return 'shared'
 
@@ -156,6 +155,22 @@ class SharedPostSerializer(PostLikedMixin, PostSubClassProfilesMixin, serializer
         model = SharedPost
         fields = ('id', 'postType', 'owner', 'placedOnProfile', 'date', 'location', 'content', 'likes', 'liked', 'sharedPost')
 
+class CommentSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField()
+    date = serializers.ReadOnlyField()
+    liked = serializers.SerializerMethodField()
+
+    def get_profile(self, obj):
+        return ProfileSerializer(obj.profile, read_only=True, context=self.context).data
+
+    def get_liked(self, obj):
+        if self.context['request'].user.is_authenticated():
+            return CommentLike.objects.filter(on=obj, profile=self.context['request'].user.profile).exists()
+        return False
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'profile', 'date', 'content', 'likes', 'liked')
 
 class PostLikeSerializer(serializers.ModelSerializer):
     likeType = serializers.SerializerMethodField()

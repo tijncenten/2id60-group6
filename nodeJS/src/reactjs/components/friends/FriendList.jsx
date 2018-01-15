@@ -42,8 +42,9 @@ export default class FriendList extends React.Component {
     newProfiles.splice(this.state.friends.findIndex(function(el){
       return el.id == id;
     }), 1);
-   this.setState({friends: newProfiles})
-    // TODO: Send to backend
+   this.setState({friends: newProfiles});
+
+    apiHandler.deleteFriend(id);
   }
 
   render() {

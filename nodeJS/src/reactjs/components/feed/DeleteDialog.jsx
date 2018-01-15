@@ -1,13 +1,13 @@
 import React from 'react';
 import { DialogContainer, Button } from 'react-md';
 
-export default class DeleteFriendDialog extends React.Component {
+export default class DeleteDialog extends React.Component {
+
   constructor(props){
     super(props);
 
     this.state = {
       visible: false,
-      fullname: ""
     };
 
     this.show = this.show.bind(this);
@@ -15,10 +15,9 @@ export default class DeleteFriendDialog extends React.Component {
     this.delete = this.delete.bind(this);
   }
 
-  show(name){
+  show(){
     this.setState({
       visible: true,
-      fullname: name
     });
   }
 
@@ -28,7 +27,7 @@ export default class DeleteFriendDialog extends React.Component {
 
   delete() {
     this.hide()
-    this.props.deleteFriend(this.props.id);
+    this.props.deletePost(this.props.id);
   }
 
   render() {
@@ -37,7 +36,7 @@ export default class DeleteFriendDialog extends React.Component {
     const actions = [{
       onClick: this.delete,
       primary: true,
-      children: 'Yes, delete friend',
+      children: 'Yes, delete post',
     }, {
       onClick: this.hide,
       primary: true,
@@ -48,12 +47,12 @@ export default class DeleteFriendDialog extends React.Component {
       <DialogContainer
         id="simple-list-dialog"
         visible={visible}
-        title="Delete friend"
+        title="Delete post"
         onHide={this.hide}
         focusOnMount={false}
         modal
         actions={actions} >
-        <p> Are you sure that you want to delete <strong>{this.state.fullname}</strong> from your friend list?</p>
+        <p> Are you sure that you want to delete this post?</p>
       </DialogContainer>
     );
   }
