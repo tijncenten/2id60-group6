@@ -63,11 +63,12 @@ class FriendSerializer(serializers.ModelSerializer):
     firstName = serializers.ReadOnlyField(source='friend.user.first_name')
     lastName = serializers.ReadOnlyField(source='friend.user.last_name')
     email = serializers.ReadOnlyField(source='friend.user.email')
+    profilePicture = serializers.ImageField(source='friend.profilePicture', read_only=True)
     friendSince = serializers.ReadOnlyField(source='date')
 
     class Meta:
         model = Friendship
-        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'friendSince')
+        fields = ('id', 'username', 'firstName', 'lastName', 'email', 'profilePicture', 'friendSince')
 
 class FriendRequestSerializer(serializers.ModelSerializer):
     sender = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -76,11 +77,12 @@ class FriendRequestSerializer(serializers.ModelSerializer):
     firstName = serializers.ReadOnlyField(source='sender.user.first_name')
     lastName = serializers.ReadOnlyField(source='sender.user.last_name')
     email = serializers.ReadOnlyField(source='sender.user.email')
+    profilePicture = serializers.ImageField(source='sender.profilePicture', read_only=True)
     date = serializers.ReadOnlyField()
 
     class Meta:
         model = FriendRequest
-        fields = ('sender', 'receiver', 'username', 'firstName', 'lastName', 'email', 'date')
+        fields = ('sender', 'receiver', 'username', 'firstName', 'lastName', 'email', 'profilePicture', 'date')
 
 class PostSerializer(serializers.ModelSerializer):
     postType = serializers.SerializerMethodField()
