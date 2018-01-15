@@ -51,7 +51,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'firstName', 'lastName', 'email', 'profilePicture', 'relation', 'friendCount')
 
 class ProfileDetailSerializer(ProfileSerializer):
-    profilePicture = serializers.ImageField()
+    profilePicture = serializers.ImageField(required=False)
 
     class Meta:
         model = Profile

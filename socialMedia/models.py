@@ -25,10 +25,21 @@ class Profile(models.Model):
     profilePictureSmall = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)
     profilePictureThumb = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)
 
+    __original_profile_picture = None
+
+    def __init__(self, *args, **kwargs):
+        super(Profile, self).__init__(*args, **kwargs)
+        self.__original_profile_picture = self.profilePicture.name
+
     def save(self, *args, **kwargs):
-        if self.profilePicture:
+        if self.profilePicture and self.profilePicture.name != self.__original_profile_picture:
             #Large profile picture
             img = Image.open(self.profilePicture)
+            if img.mode in ('RGBA', 'LA'):
+                fill_color = (255, 255, 255)
+                background = Image.new(img.mode[:-1], img.size, fill_color)
+                background.paste(img, img.split()[-1])
+                img = background
             output = BytesIO()
             img.thumbnail((800, 800), Image.ANTIALIAS)
             img.save(output, format='JPEG', quality=100)
@@ -73,6 +84,7 @@ class Profile(models.Model):
             output.seek(0)
             self.profilePictureThumb = InMemoryUploadedFile(output, 'profilePictureThumb', "%s-thumb.jpg" % self.profilePicture.name.split('.')[0], 'image/jpeg', sys.getsizeof(output), None)
         super(Profile, self).save(*args, **kwargs)
+        self.__original_profile_picture = self.profilePicture.name
 
     def __str__(self):
         return self.user.username
