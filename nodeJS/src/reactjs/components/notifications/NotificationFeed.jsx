@@ -33,7 +33,6 @@ export default class NotificationFeed extends React.Component {
 
   render() {
     let content;
-    console.log(this.state.requests);
     if(this.state.requests === null){
       content = (
         <span className="loading">
