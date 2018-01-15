@@ -78,7 +78,14 @@ export default class ProfileBanner extends React.Component {
         <Avatar src={profilePictureParser.parseNormal(profile.profilePicture)} className="profile-banner-picture"/>
       );
     }
-
+    let bio;
+    if(profile.bio === "" && profile.id == activeUser.id){
+      bio = "-You currently have no bio, you can add one by clicking on the 'Edit Profile' button.";
+    } else if (profile.bio === "") {
+      bio = "-This person doesn't have a bio.";
+    } else {
+      bio = "-" + profile.bio;
+    }
     return(
       <div className="md-paper md-paper--1 profile-banner">
         <div className="profile-banner-inner">
@@ -88,7 +95,7 @@ export default class ProfileBanner extends React.Component {
               <CardTitle title={fullname}/>
             </NavLink>
             <CardText >
-              <p> -Hi, I'm a person that really likes pizza! cheers!</p>
+              <p>{bio}</p>
             </CardText>
             <CardActions className="profile-banner-buttons">
               {actions}

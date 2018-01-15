@@ -20,7 +20,7 @@ def user_directory_path(instance, filename):
 class Profile(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='profile')
     friends = models.ManyToManyField('self', through='Friendship', symmetrical=False, related_name='friends+')
-    bio = models.CharField(max_length=254, default='')
+    bio = models.CharField(max_length=254, default='', blank=True)
     profilePicture = models.ImageField(upload_to=user_directory_path, blank=True)
     profilePictureNormal = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)
     profilePictureSmall = models.ImageField(upload_to=user_directory_path, blank=True, editable=False)

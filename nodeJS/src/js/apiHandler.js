@@ -10,14 +10,9 @@ export default new class {
   }
 
   async setProfileInformation(bio, pictureUri = null) {
-    if(bio === null && pictureUri === null) {
-      return;
-    }
     let formData = new FormData();
     formData.append('csrfmiddlewaretoken', csrf_token);
-    if(bio !== null) {
-      formData.append('bio', bio);
-    }
+    formData.append('bio', bio.trim());
     if(pictureUri !== null) {
       formData.append('profilePicture', pictureUri);
     }
