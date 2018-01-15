@@ -56,24 +56,28 @@ class FeedComponent extends React.Component {
     const { id, postType, owner, placedOnProfile, date, location, content } = this.props.data;
     const initials = (owner.firstName[0] + owner.lastName[0]).toUpperCase();
     let title = (
-      <NavLink className="link-styling" to={`/profile/${owner.username}`}>
-        {owner.firstName + " " + owner.lastName}
-      </NavLink>
+      <div>
+        <NavLink className="link-styling" to={`/profile/${owner.username}`}>
+          {owner.firstName + " " + owner.lastName}
+        </NavLink>
+      </div>
     )
 
     let sharedContent;
     if (postType === "shared"){
       const sharedPost = this.props.data.sharedPost;
       title = (
-        <span>
-          <NavLink className="link-styling" to={`/profile/${owner.username}`}>
-            {owner.firstName + " " + owner.lastName + " "}
-          </NavLink>
-          shared a message of
-          <NavLink className="link-styling" to={`/profile/${sharedPost.owner.username}`}>
-            {" " + sharedPost.owner.firstName + " " + sharedPost.owner.lastName}
-          </NavLink>
-        </span>
+        <div>
+          <span>
+            <NavLink className="link-styling" to={`/profile/${owner.username}`}>
+              {owner.firstName + " " + owner.lastName + " "}
+            </NavLink>
+            shared a message of
+            <NavLink className="link-styling" to={`/profile/${sharedPost.owner.username}`}>
+              {" " + sharedPost.owner.firstName + " " + sharedPost.owner.lastName}
+            </NavLink>
+          </span>
+        </div>
       );
       sharedContent = (
         <SharedFeedComponent sharedPost={sharedPost}/>
@@ -111,11 +115,11 @@ class FeedComponent extends React.Component {
           </div>
           <Button icon primary onClick={this.handleCommentOpen}>comment</Button>
           <Button icon primary onClick={this.handleShareOpen}>share</Button>
-          {owner.id == activeUser.id && <Button icon primary onClick={this.handleDeleteOpen}>delete</Button> }
+          {(owner.id == activeUser.id || placedOnProfile.id == activeUser.id) && <Button icon primary onClick={this.handleDeleteOpen}>delete</Button> }
         </CardActions>
         <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}} post={this.props.data}/>
         <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}} sharePost={this.props.sharePost} data={this.props.data}/>
-        {owner.id == activeUser.id && <DeleteDialog ref={ (dialog) => { this.deleteDialog = dialog}} deletePost={this.props.deletePost} id={this.props.data.id}/> }
+        {(owner.id == activeUser.id || placedOnProfile.id == activeUser.id) && <DeleteDialog ref={ (dialog) => { this.deleteDialog = dialog}} deletePost={this.props.deletePost} id={this.props.data.id}/> }
       </Card>
     );
   }
