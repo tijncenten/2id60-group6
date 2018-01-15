@@ -13,9 +13,9 @@ from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status, generics, permissions, serializers
-from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly, IsMeOrReadOnly
-from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost, PostLike
-from .serializers import ProfileSerializer, ProfileDetailSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer
+from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly, IsCommentOwnerOrReadOnly, IsMeOrReadOnly
+from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost, PostLike, CommentLike, Comment
+from .serializers import ProfileSerializer, ProfileDetailSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer, CommentLikeSerializer, CommentSerializer
 from .forms import SignUpForm
 
 # Create your views here.
@@ -268,13 +268,56 @@ class PostLikeList(generics.ListAPIView):
         return PostLike.objects.filter(on=post)
 
     def post(self, request, pk, format=None):
-        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        post = Post.objects.get_subclass(id=pk)
         if post.add_like(self.request.user.profile):
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
-        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        post = Post.objects.get_subclass(id=pk)
         if post.remove_like(self.request.user.profile):
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+class CommentList(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        return Comment.objects.filter(post=post)
+
+    def perform_create(self, serializer):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        profile = self.request.user.profile
+        serializer.save(profile=profile, post=post)
+
+class CommentDetail(generics.RetrieveDestroyAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsCommentOwnerOrReadOnly)
+    serializer_class = CommentSerializer
+    lookup_url_kwarg = 'ck'
+
+    def get_queryset(self):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        return Comment.objects.filter(post=post)
+
+class CommentLikeList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = CommentLikeSerializer
+
+    def get_queryset(self):
+        post = Post.objects.get_subclass(id=self.kwargs['pk'])
+        comment = Comment.objects.get(post=post, id=self.kwargs['ck'])
+        return CommentLike.objects.filter(on=comment)
+
+    def post(self, request, pk, ck, format=None):
+        comment = Comment.objects.get(id=ck)
+        if comment.add_like(self.request.user.profile):
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, pk, ck, format=None):
+        comment = Comment.objects.get(id=ck)
+        if comment.remove_like(self.request.user.profile):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)

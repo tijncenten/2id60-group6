@@ -20,8 +20,6 @@ export default class DeleteFriendDialog extends React.Component {
       visible: true,
       fullname: name
     });
-    console.log("show functie")
-    console.log(name)
   }
 
   hide(){

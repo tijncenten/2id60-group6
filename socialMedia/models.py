@@ -171,9 +171,29 @@ class Comment(models.Model):
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
+    likes = models.PositiveIntegerField(editable=False, default=0)
+
+    def add_like(self, profile):
+        commentLike, created = CommentLike.objects.get_or_create(on=self, profile=profile)
+        return created
+
+    def remove_like(self, profile):
+        deleted = CommentLike.objects.filter(on=self, profile=profile).delete()
+        return deleted[0] > 0
 
     def __str__(self):
         return 'Comment on Post ' + str(self.post.id) + ': ' + self.content
+
+@receiver(post_save, sender=CommentLike)
+def create_comment_like(sender, instance, created, **kwargs):
+    if created:
+        instance.on.likes += 1
+        instance.on.save()
+
+@receiver(post_delete, sender=CommentLike)
+def delete_comment_like(sender, instance, **kwargs):
+    instance.on.likes -= 1
+    instance.on.save()
 
 class Post(models.Model):
     owner = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='profilePost')
