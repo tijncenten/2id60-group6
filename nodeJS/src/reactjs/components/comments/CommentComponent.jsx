@@ -54,7 +54,9 @@ class CommentComponent extends React.Component {
 
     return (
       <div>
-        {avatar}
+        <NavLink to={`/profile/${profile.username}`}>
+          {avatar}
+        </NavLink>
         <div className="md-paper md-paper--1 chat-message comment-message">
           <div>
             {title}
