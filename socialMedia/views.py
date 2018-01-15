@@ -244,6 +244,13 @@ class PostDetail(PostSubClassFieldsMixin, generics.RetrieveDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsPostOwnerOrReadOnly)
     serializer_class = PostSerializer
 
+# view for getting the posts that have been shared by someone
+class PostShareList(generics.ListCreateAPIView):
+    serializer_class = SharedPostSerializer
+
+    def get_queryset(self):
+        return SharedPost.objects.filter(sharedPost__owner=self.kwargs['pk'])
+
 class PostShare(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsPostOwnerOrReadOnly)
     serializer_class = SharedPostSerializer
