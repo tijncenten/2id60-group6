@@ -2,6 +2,7 @@ import React from 'react';
 import { Paper, Avatar, Button, FontIcon } from 'react-md';
 import { NavLink } from 'react-router-dom';
 import apiHandler from '../../../js/apiHandler';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 class CommentComponent extends React.Component {
 
@@ -33,14 +34,30 @@ class CommentComponent extends React.Component {
   render() {
     const { profile, content, date } = this.props.data;
 
+    let title = (
+      <NavLink className="link-styling" to={`/profile/${profile.username}`}>
+        {profile.firstName + " " + profile.lastName}
+      </NavLink>
+    )
+
+    let avatar;
+    if(profile.profilePicture === null){
+      const initials = (profile.firstName[0] + profile.lastName[0]).toUpperCase();
+      avatar = (
+        <Avatar className="comment-avatar" suffix={profile.avatarColor}>{initials}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar className="comment-avatar" src={profilePictureParser.parseThumb(profile.profilePicture)}/>
+      );
+    }
+
     return (
       <div>
-        <NavLink to={`/profile/${profile.username}`}>
-          <Avatar random className="comment-avatar">{profile.firstName.substring(0,1) + profile.lastName.substring(0,1)}</Avatar>
-        </NavLink>
+        {avatar}
         <div className="md-paper md-paper--1 chat-message comment-message">
           <div>
-            <NavLink className="link-styling" to={`/profile/${profile.username}`}>{profile.username}</NavLink>
+            {title}
             {" " + content}
           </div>
           <div className="comment-info-wrapper d-flex">

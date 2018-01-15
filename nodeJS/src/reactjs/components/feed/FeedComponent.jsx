@@ -19,8 +19,6 @@ class FeedComponent extends React.Component {
       commentDialog: "unset",
     }
 
-
-
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
     this.handleCommentOpen = this.handleCommentOpen.bind(this);
     this.handleShareOpen = this.handleShareOpen.bind(this);

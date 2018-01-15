@@ -1,13 +1,26 @@
 import React from 'react';
 import { Avatar, Button, Card, CardTitle, CardText, TextField } from 'react-md';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 class PostCreate extends React.Component {
 
   render() {
+    let avatar;
+    if(activeUser.profilePicture === null){
+      const initials = (owner.firstName[0] + owner.lastName[0]).toUpperCase();
+      avatar = (
+        <Avatar suffix={activeUser.avatarColor}>{initials}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar src={profilePictureParser.parseThumb(activeUser.profilePicture)}/>
+      );
+    }
+
     return (
       <Card className="md-block-centered post-create">
         <CardText>
-          <Avatar className="post-avatar" suffix={activeUser.avatarColor}>{activeUser.firstName[0] + activeUser.lastName[0]}</Avatar>
+          {avatar}
           <form className="post-form" onSubmit={this.handleSubmit.bind(this)}>
             <TextField
               id="post-input"
