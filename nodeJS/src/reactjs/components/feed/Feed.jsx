@@ -49,6 +49,16 @@ export default class Feed extends React.Component {
     apiHandler.postDelete(id);
   }
 
+  sharePost(id, message) {
+    var post = this.state.posts.find(function(el) {
+      return el.id == id;
+    });
+
+    if (!(post === null || post === undefined)) {
+        apiHandler.postShare(id, message, post.location);
+    }
+  }
+
   downloadPosts(profile) {
     const postCallback = (posts) => {
       this.setState({
@@ -72,6 +82,7 @@ export default class Feed extends React.Component {
           <FeedComponent
             key={post.id}
             deletePost={ this.deletePost.bind(this) }
+            sharePost={ this.sharePost.bind(this) }
             data={post} />
         ))}
       </div>

@@ -103,7 +103,7 @@ class FeedComponent extends React.Component {
           {owner.id == activeUser.id && <Button icon primary onClick={this.handleDeleteOpen}>delete</Button> }
         </CardActions>
         <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}}/>
-        <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}}/>
+        <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}} sharePost={this.props.sharePost} data={this.props.data}/>
         {owner.id == activeUser.id && <DeleteDialog ref={ (dialog) => { this.deleteDialog = dialog}} deletePost={this.props.deletePost} id={this.props.data.id}/> }
       </Card>
     );
