@@ -95,13 +95,33 @@ export default new class {
       data: {
         csrfmiddlewaretoken: csrf_token,
       }
-    })
+    });
   }
 
   async postUnlike(id) {
     await jQuery.ajax({
       method: 'DELETE',
       url: `/api/posts/${id}/likes`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+  }
+
+  async friendDelete(id, fk) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/profiles/${id}/friends/${fk}/`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+  }
+
+  async postDelete(id) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${id}`,
       headers: {
         "X-CSRFTOKEN": csrf_token,
       }
