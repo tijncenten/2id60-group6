@@ -130,6 +130,10 @@ html, body {
   margin: 0px 4px;
 }
 
+#simple-list-dialog {
+  top: none !important;
+}
+
 @media screen and (min-width: 768px) {
   .title-toolbar .toolbar-title-text {
     display: initial;

@@ -51,7 +51,11 @@ export default class DeleteDialog extends React.Component {
         onHide={this.hide}
         focusOnMount={false}
         modal
-        actions={actions} >
+        actions={actions}
+        portal={true}
+        lastChild={true}
+        disableScrollLocking={true}
+        renderNode={document.body} >
         <p> Are you sure that you want to delete this comment?</p>
       </DialogContainer>
     );
