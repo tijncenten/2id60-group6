@@ -1,5 +1,6 @@
 from channels import Channel
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
 from django.db.models.signals import post_save, post_delete
@@ -103,6 +104,27 @@ class Profile(models.Model):
     def get_friends(self):
         return Friendship.objects.filter(profile=self)
         # return self.friends.filter(friendSet__profile=self)
+
+    def add_chat(self, other):
+        fromChat = Chat.objects.filter(fromProfile=self, toProfile=other).exists()
+        toChat = Chat.objects.filter(fromProfile=other, toProfile=self).exists()
+        exists = fromChat or toChat
+        if not exists:
+            chat = Chat.objects.create(fromProfile=self, toProfile=other)
+            return chat
+        if fromChat:
+            return Chat.objects.get(fromProfile=self, toProfile=other)
+        return Chat.objects.filter(fromProfile=other, toProfile=self)
+
+    def has_chat(self, other):
+        return Chat.objects.filter(Q(fromProfile=self, toProfile=other) |
+            Q(fromProfile=other, toProfile=self)).exists()
+
+    # def remove_chat(self, other):
+    #     Chat.objects.filter(fromProfile=self, toProfile=other).delete()
+
+    def get_chats(self):
+        return Chat.objects.filter(Q(fromProfile=self) | Q(toProfile=self))
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
@@ -243,8 +265,19 @@ class MapPost(NewPost):
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     lon = models.DecimalField(max_digits=9, decimal_places=6)
 
+class Chat(models.Model):
+    fromProfile = models.ForeignKey('Profile', related_name='fromChatProfileSet')
+    toProfile = models.ForeignKey('Profile', related_name='toChatProfileSet')
+    date = models.DateTimeField(auto_now_add=True)
+    fromHidden = models.BooleanField(default=False, editable=False)
+    toHidden = models.BooleanField(default=False, editable=False)
+
+    class Meta:
+        unique_together = ('fromProfile', 'toProfile',)
+
 class ChatMessage(models.Model):
+    chat = models.ForeignKey('Chat', related_name='messages')
     fromProfile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='sentMessages')
-    toProfile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='receivedMessages')
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     message = models.TextField()
+    read = models.BooleanField(default=False)
