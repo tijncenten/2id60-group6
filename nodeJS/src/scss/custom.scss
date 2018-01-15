@@ -135,15 +135,16 @@ html, body {
 }
 
 @media screen and (min-width: 768px) {
-  .title-toolbar .toolbar-title-text {
-    display: initial;
-  }
-
   .md-toolbar--action-right .md-icon-separator {
     padding-left: 16px;
 
     span {
       display: flex;
     }
+  }
+}
+@media screen and (min-width: 1066px) {
+  .title-toolbar .toolbar-title-text {
+    display: initial;
   }
 }
