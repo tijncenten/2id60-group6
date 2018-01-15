@@ -218,6 +218,7 @@ class ChatSerializer(serializers.ModelSerializer):
 
 class ChatMessageSerializer(serializers.ModelSerializer):
     fromProfile = serializers.SerializerMethodField()
+    chat = serializers.PrimaryKeyRelatedField(read_only=True)
 
     def get_fromProfile(self, obj):
         if self.context['request'].user.is_authenticated():
@@ -227,4 +228,4 @@ class ChatMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChatMessage
-        fields = ('id', 'fromProfile', 'timestamp', 'message', 'read')
+        fields = ('id', 'chat', 'fromProfile', 'timestamp', 'message', 'read')

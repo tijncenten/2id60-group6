@@ -2,22 +2,7 @@ import React from 'react';
 import View from './View.jsx';
 import ChatList from '../components/chat/ChatList.jsx';
 import Chat from '../components/chat/Chat.jsx';
-
-const items = [
-  {
-    id: 1,
-    name: "Test name"
-  }, {
-    id: 2,
-    name: "John Doe"
-  }, {
-    id: 3,
-    name: "Jane Doe"
-  }, {
-    id: 4,
-    name: "Richard Roe"
-  }
-];
+import apiHandler from '../../js/apiHandler';
 
 export default class ChatView extends View {
   constructor(props) {
@@ -27,11 +12,13 @@ export default class ChatView extends View {
     this.state = {
       selected: undefined,
       chatDrawer: false,
-      chatVisible: false
+      chatVisible: false,
+      chats: null
     };
 
     this.calculateWidth = this.calculateWidth.bind(this);
     this.selectChat = this.selectChat.bind(this);
+    this.update = this.update.bind(this);
 
     window.addEventListener("resize", this.calculateWidth);
     this._mounted = false;
@@ -41,6 +28,7 @@ export default class ChatView extends View {
     super.componentDidMount();
     this._mounted = true;
     this.calculateWidth();
+    this.update();
   }
 
   componentWillUnmount() {
@@ -65,6 +53,14 @@ export default class ChatView extends View {
     this.setState({selected: chat, chatVisible: true});
   }
 
+  update() {
+    apiHandler.getChats().then(result => {
+      this.setState({
+        chats: result
+      });
+    });
+  }
+
 
   render() {
     const selectedId = this.state.selected === undefined ? -1 : this.state.selected.id;
@@ -72,7 +68,7 @@ export default class ChatView extends View {
     className += this.state.chatDrawer ? "" : " chat-2-column";
     return (
       <div className={className}>
-        <ChatList items={items} onItemClick={this.selectChat} selectedId={selectedId} />
+        <ChatList items={this.state.chats} onItemClick={this.selectChat} selectedId={selectedId} />
         <Chat isDrawer={this.state.chatDrawer} visible={this.state.chatVisible} chat={this.state.selected} />
       </div>
     );

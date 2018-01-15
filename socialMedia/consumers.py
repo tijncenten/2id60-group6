@@ -1,10 +1,12 @@
 # In consumers.py
 import json
 from channels import Channel, Group
+from django.contrib.auth.models import User
 from channels.sessions import channel_session
 from channels.auth import channel_session_user, channel_session_user_from_http
 from channels.security.websockets import allowed_hosts_only
 from urllib.parse import parse_qs
+from django.test import RequestFactory
 from .models import Chat, ChatMessage, Profile, FriendRequest
 from .serializers import FriendRequestSerializer, ChatMessageSerializer
 
@@ -23,11 +25,29 @@ def msg_consumer_chat(message):
     )
     m.save()
 
-    data = ChatMessageSerializer(m).data
-    data['timestamp'] = data['timestamp'].isoformat()
+    context = {}
+    request_factory = RequestFactory()
+    request = request_factory.get('/')
+    request.user = User.objects.get(id=from_id)
+    context['request'] = request
+
+    data = ChatMessageSerializer(m, context=context).data
+    data['timestamp'] = data['timestamp']
 
     Group('chat-%i' % to_id).send({
-        "text": data,
+        "text": json.dumps({
+            "type": "chatMessage",
+            "content": data
+        })
+    })
+
+    data['fromProfile'] = 'self'
+
+    Group('chat-%i' % from_id).send({
+        "text": json.dumps({
+            "type": "chatMessage",
+            "content": data
+        })
     })
 
 def msg_consumer_notification(message):

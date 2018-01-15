@@ -167,7 +167,7 @@ export default new class {
       headers: {
         "X-CSRFTOKEN": csrf_token,
       }
-    })
+    });
   }
 
   async postShare(id, content, location) {
@@ -181,7 +181,29 @@ export default new class {
         content: content,
         location: location,
       }
-    })
+    });
+  }
+
+  async getChats() {
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/chats`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+    return parseChats(result);
+  }
+
+  async getChatMessages(id) {
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/chats/${id}/messages`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+    return parseChatMessages(result);
   }
 }
 
@@ -236,7 +258,7 @@ const parseProfilesSearch = (profiles) => {
     username: profile.username,
     relation: profile.relation.type,
     requesttype: profile.relation.requestType,
-  }));  
+  }));
 }
 
 const parseFriendRequests = (requests) => {
@@ -257,7 +279,36 @@ const parseFriendRequest = (request) => {
   const hours = (date.getHours() === 0) ? "00" : date.getHours();
   const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
   request.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
-  return request
+  return request;
+}
+
+const parseChats = (chats) => {
+  return chats.map(chat => (
+    parseChat(chat)
+  ));
+}
+
+const parseChat = (chat) => {
+  chat.profile = parseProfile(chat.profile);
+  const date = new Date(chat.date);
+  const hours = (date.getHours() === 0) ? "00" : date.getHours();
+  const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+  chat.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
+  return chat;
+}
+
+const parseChatMessages = (messages) => {
+  return messages.map(message => (
+    parseChatMessage(message)
+  ));
+}
+
+const parseChatMessage = (message) => {
+  const date = new Date(message.timestamp);
+  const hours = (date.getHours() === 0) ? "00" : date.getHours();
+  const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+  message.timestamp = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
+  return message;
 }
 
 activeUser = parseProfile(activeUser);
