@@ -43,6 +43,16 @@ class CommentDialog extends React.Component {
     }
   }
 
+  deleteComment(id) {
+    var newComments = this.state.comments;
+    newComments.splice(this.state.comments.findIndex(function(el){
+      return el.id == id;
+    }), 1);
+    this.setState( {comments: newComments} );
+
+    apiHandler.commentDelete(this.props.post.id, id);
+  }
+
   downloadComments(id) {
     const commentCallback = (comments) => {
       this.setState({
@@ -69,6 +79,7 @@ class CommentDialog extends React.Component {
           <CommentComponent
             key={comment.id}
             postId={this.props.post.id}
+            deleteComment={this.deleteComment.bind(this)}
             data={comment} />
         ))}
         <CommentCreate createComment = { this.createComment.bind(this) } />

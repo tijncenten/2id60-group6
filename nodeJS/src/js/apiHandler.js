@@ -135,6 +135,16 @@ export default new class {
     return parsePost(result);
   }
 
+  async postDelete(id) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${id}`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
+
   async getComments(id) {
     const result = await jQuery.ajax({
       method: 'GET',
@@ -195,10 +205,10 @@ export default new class {
     });
   }
 
-  async commentDelete(id) {
+  async commentDelete(postId, commentId) {
     await jQuery.ajax({
       method: 'DELETE',
-      url: `/api/posts/${id}`,
+      url: `/api/posts/${postId}/comments/${commentId}`,
       headers: {
         "X-CSRFTOKEN": csrf_token,
       }

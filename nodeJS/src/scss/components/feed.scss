@@ -28,11 +28,16 @@
 
   .feed-component {
     margin-bottom:8px;
-    
+
     .shared {
       margin: 0 20px;
     }
   }
+}
+
+.post-delete-button {
+  display: flex;
+  float: right;
 }
 
 /* from here the styling is of ShareDialog */

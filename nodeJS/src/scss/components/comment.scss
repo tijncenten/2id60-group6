@@ -44,8 +44,8 @@ $comment-avatar-dimensions: 30px;
 
 }
 
-.inline-block{
-  display:inline-block;
+.comment-actions {
+  display: flex;
 }
 
 .number-of-likes{
@@ -58,6 +58,11 @@ $comment-avatar-dimensions: 30px;
   height:20px;
   min-width: 63px;
   padding: 5px 16px;
+}
+
+.comment-delete-button {
+  float: right;
+  display: flex;
 }
 
 @media screen and (min-width: 1025px) {
