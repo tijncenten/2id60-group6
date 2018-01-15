@@ -169,6 +169,20 @@ export default new class {
       }
     })
   }
+
+  async postShare(id, content, location) {
+    await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${id}/share`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      },
+      data: {
+        content: content,
+        location: location,
+      }
+    })
+  }
 }
 
 const parsePosts = (posts) => {
