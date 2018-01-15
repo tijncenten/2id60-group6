@@ -7,6 +7,7 @@ import ShareDialog from './ShareDialog.jsx';
 import DeleteDialog from './DeleteDialog.jsx';
 import SharedFeedComponent from './SharedFeedComponent.jsx';
 import apiHandler from '../../../js/apiHandler';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 class FeedComponent extends React.Component {
   constructor(props) {
@@ -80,12 +81,24 @@ class FeedComponent extends React.Component {
         <SharedFeedComponent sharedPost={sharedPost}/>
       );
     }
+
+    let avatar;
+    if(owner.profilePicture === null){
+      avatar = (
+        <Avatar suffix={owner.avatarColor}>{initials}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar src={profilePictureParser.parseThumb(owner.profilePicture)}/>
+      );
+    }
+
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
           title={title}
           subtitle={date}
-          avatar={<NavLink to={`/profile/${owner.username}`}><Avatar suffix={owner.avatarColor}>{initials}</Avatar></NavLink>}>
+          avatar={<NavLink to={`/profile/${owner.username}`}>{avatar}</NavLink>}>
         </CardTitle>
         <CardText>
           {(content !== null || content !== "") && (
