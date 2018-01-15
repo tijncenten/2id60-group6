@@ -98,4 +98,8 @@
     &.chat-message--my-message + .chat-message.chat-message--my-message {
       margin-top:2px;
     }
+
+  &:last-child {
+    margin-bottom:10px;
+  }
 }

@@ -28,7 +28,7 @@ class AppRouter extends React.Component {
     };
 
     const TO_PREFIX = '';
-    
+
     this.navItems = [{
         label: 'Home',
         to: `${TO_PREFIX}/`,
@@ -45,7 +45,7 @@ class AppRouter extends React.Component {
       }, {
         label: 'Chats',
         to: `${TO_PREFIX}/chats`,
-        exact: true,
+        exact: false,
         icon: 'chat',
         component: ChatView,
         badgeContent: this.state.badgeChatCount,

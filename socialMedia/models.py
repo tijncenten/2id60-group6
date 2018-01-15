@@ -124,7 +124,7 @@ class Profile(models.Model):
             return chat
         if fromChat:
             return Chat.objects.get(fromProfile=self, toProfile=other)
-        return Chat.objects.filter(fromProfile=other, toProfile=self)
+        return Chat.objects.get(fromProfile=other, toProfile=self)
 
     def has_chat(self, other):
         return Chat.objects.filter(Q(fromProfile=self, toProfile=other) |
