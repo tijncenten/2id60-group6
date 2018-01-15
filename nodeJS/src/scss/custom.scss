@@ -126,6 +126,10 @@ html, body {
   }
 }
 
+.md-btn--icon {
+  margin: 0px 4px;
+}
+
 @media screen and (min-width: 768px) {
   .title-toolbar .toolbar-title-text {
     display: initial;
