@@ -19,7 +19,7 @@ const ProfileMenu = ({ simplifiedMenu }) => (
         x: DropdownMenu.HorizontalAnchors.INNER_RIGHT,
         y: DropdownMenu.VerticalAnchors.BOTTOM,
       }}
-      position={DropdownMenu.Positions.TOP_RIGHT}
+      position={DropdownMenu.Positions.BELOW}
       animationPosition="below"
       sameWidth
       simplifiedMenu={simplifiedMenu}

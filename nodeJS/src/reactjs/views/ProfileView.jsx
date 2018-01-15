@@ -15,17 +15,22 @@ export default class ProfileView extends View {
     this.state = {
       profile: null,
     };
+
+    this.update = this.update.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
+    this.update();
+  }
+
+  update(){
     apiHandler.getProfileByUserName(this.props.match.params.username).then(result => {
       this.setState({
         profile: result
       });
     });
   }
-
 
   render() {
     if(this.state.profile === null){
@@ -38,7 +43,7 @@ export default class ProfileView extends View {
     }
     return (
       <div>
-        <ProfileBanner profile={this.state.profile}/>
+        <ProfileBanner profile={this.state.profile} update={this.update}/>
         <Route path="/profile/:username" exact render={props => <Feed {...props} profile={this.state.profile} />} />
         <Route path="/profile/:username/friends" exact render={props => <FriendList {...props} profile={this.state.profile} />} />
       </div>

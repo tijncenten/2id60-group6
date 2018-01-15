@@ -11,6 +11,7 @@ export default class ShareDialog extends React.Component {
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
+    this.handleShare = this.handleShare.bind(this);
   }
 
   show(){
@@ -21,14 +22,22 @@ export default class ShareDialog extends React.Component {
     this.setState({ visible: false });
   }
 
+  handleShare(){
+    this.hide();
+
+    this.props.sharePost(this.props.data.id, this.message.value);
+  }
+
   render() {
     const { visible } = this.state;
+    const { id, owner, date } = this.props.data;
+
     const actions = [{
       onClick: this.hide,
       primary: false,
       children: 'Cancel',
     }, {
-      onClick: this.hide,
+      onClick: this.handleShare,
       primary: true,
       children: 'Share',
     }];
@@ -42,7 +51,7 @@ export default class ShareDialog extends React.Component {
         focusOnMount={false}
         dialogClassName="share-dialog"
         modal
-        actions={actions} >  
+        actions={actions} >
         <Button icon onClick={this.hide} className="dialog-close-button">close</Button>
         <TextField
           id="share-message"
@@ -51,9 +60,10 @@ export default class ShareDialog extends React.Component {
           rows={4}
           paddedBlock
           className="share-dialog-message md-paper md-paper--1"
+          ref={(input) => this.message = input}
         />
         <div className="share-dialog-post">
-          <p>sharing <strong>John's</strong> post from <strong>2018-1-3</strong></p>
+          <p>sharing <strong>{owner.firstName}'s</strong> post from <strong>{date}</strong></p>
         </div>
       </DialogContainer>
     );

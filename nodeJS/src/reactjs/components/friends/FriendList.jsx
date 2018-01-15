@@ -44,7 +44,7 @@ export default class FriendList extends React.Component {
     }), 1);
    this.setState({friends: newProfiles});
 
-    apiHandler.friendDelete(activeUser.id, id);
+    apiHandler.deleteFriend(id);
   }
 
   render() {

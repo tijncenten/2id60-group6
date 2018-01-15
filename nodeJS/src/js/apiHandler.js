@@ -51,6 +51,58 @@ export default new class {
     return parseProfiles(result);
   }
 
+  async addFriend(id){
+    await jQuery.ajax({
+      method: 'POST',
+      url: `/api/profiles/me/friends/requests/`,
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+        receiver: id,
+      }
+    })
+  }
+
+  async deleteFriend(fk){
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/profiles/me/friends/${fk}/`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
+
+  async acceptFriendRequest(fk){
+    await jQuery.ajax({
+      method: 'GET',
+      url: `/api/profiles/me/friends/requests/${fk}/accept`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
+
+  async declineFriendRequest(fk){
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/profiles/me/friends/requests/${fk}/`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
+
+  async getFriendRequests(){
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/profiles/me/friends/requests/`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    })
+    return parseFriendRequests(result);
+  }
+
   async getPosts() {
     const result = await jQuery.ajax({
       method: 'GET',
@@ -108,22 +160,26 @@ export default new class {
     });
   }
 
-  async friendDelete(id, fk) {
-    await jQuery.ajax({
-      method: 'DELETE',
-      url: `/api/profiles/${id}/friends/${fk}/`,
-      headers: {
-        "X-CSRFTOKEN": csrf_token,
-      }
-    });
-  }
-
   async postDelete(id) {
     await jQuery.ajax({
       method: 'DELETE',
       url: `/api/posts/${id}`,
       headers: {
         "X-CSRFTOKEN": csrf_token,
+      }
+    })
+  }
+
+  async postShare(id, content, location) {
+    await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${id}/share`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      },
+      data: {
+        content: content,
+        location: location,
       }
     })
   }
@@ -179,7 +235,29 @@ const parseProfilesSearch = (profiles) => {
     fullname: `${profile.firstName} ${profile.lastName}`,
     username: profile.username,
     relation: profile.relation.type,
-  }));
+    requesttype: profile.relation.requestType,
+  }));  
+}
+
+const parseFriendRequests = (requests) => {
+  return requests.map(request => (
+    parseFriendRequest(request)
+  ));
+}
+
+const parseFriendRequest = (request) => {
+  if(request.firstName === undefined || request.lastName === undefined){
+    return request;
+  }
+  const colorArray = Avatar.defaultProps.suffixes;
+  const total = request.firstName.charCodeAt(0) + request.lastName.charCodeAt(0);
+  request.avatarColor = colorArray[total%colorArray.length];
+
+  const date = new Date(request.date);
+  const hours = (date.getHours() === 0) ? "00" : date.getHours();
+  const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+  request.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
+  return request
 }
 
 activeUser = parseProfile(activeUser);
