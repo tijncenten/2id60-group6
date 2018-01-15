@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, FriendRequest, Friendship, Post, SharedPost, NewPost, Like, PostLike, CommentLike, Comment
+from .models import Profile, FriendRequest, Friendship, Post, SharedPost, NewPost, Like, PostLike, CommentLike, Comment, Chat, ChatMessage
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -195,3 +195,34 @@ class CommentLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentLike
         fields = '__all__'
+
+class ChatSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField()
+
+    def get_profile(self, obj):
+        if self.context['request'].user.is_authenticated():
+            if obj.fromProfile == self.context['request'].user.profile:
+                return ProfileSerializer(obj.toProfile, read_only=True, context=self.context).data
+            return ProfileSerializer(obj.fromProfile, read_only=True, context=self.context).data
+        result = {
+            'from': ProfileSerializer(obj.fromProfile, read_only=True, context=self.context).data,
+            'to': ProfileSerializer(obj.toProfile, read_only=True, context=self.context).data,
+        }
+        return result
+
+    class Meta:
+        model = Chat
+        fields = ('profile', 'date')
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    fromProfile = serializers.SerializerMethodField()
+
+    def get_fromProfile(self, obj):
+        if self.context['request'].user.is_authenticated():
+            if obj.fromProfile == self.context['request'].user.profile:
+                return 'self'
+        return 'other'
+
+    class Meta:
+        model = ChatMessage
+        fields = ('id', 'fromProfile', 'timestamp', 'message', 'read')

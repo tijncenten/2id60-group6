@@ -5,8 +5,8 @@ from channels.sessions import channel_session
 from channels.auth import channel_session_user, channel_session_user_from_http
 from channels.security.websockets import allowed_hosts_only
 from urllib.parse import parse_qs
-from .models import ChatMessage, Profile, FriendRequest
-from .serializers import FriendRequestSerializer
+from .models import Chat, ChatMessage, Profile, FriendRequest
+from .serializers import FriendRequestSerializer, ChatMessageSerializer
 
 def msg_consumer_chat(message):
     from_id = int(message.content['from'])
@@ -14,21 +14,20 @@ def msg_consumer_chat(message):
     fromProfile = Profile.objects.get(id=from_id)
     toProfile = Profile.objects.get(id=to_id)
 
+    chat = fromProfile.add_chat(toProfile)
+
     m = ChatMessage.objects.create(
+        chat=chat,
         fromProfile=fromProfile,
-        toProfile=toProfile,
         message=message.content['message'],
     )
     m.save()
 
+    data = ChatMessageSerializer(m).data
+    data['timestamp'] = data['timestamp'].isoformat()
+
     Group('chat-%i' % to_id).send({
-        "text": json.dumps({
-            "id": m.id,
-            "from": from_id,
-            "to": to_id,
-            "timestamp": m.timestamp.isoformat(),
-            "message": message.content['message'],
-        }),
+        "text": data,
     })
 
 def msg_consumer_notification(message):
