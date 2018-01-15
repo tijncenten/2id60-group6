@@ -16,53 +16,54 @@ import style from '../scss/style.scss';
 import apiHandler from '../js/apiHandler';
 import history from '../js/history';
 
-
-const TO_PREFIX = '';
-
-const navItems = [{
-    label: 'Home',
-    to: `${TO_PREFIX}/`,
-    exact: true,
-    icon: 'home',
-    component: MainView
-  }, {
-    label: 'My profile',
-    to: `${TO_PREFIX}/profile/${activeUser.username}`,
-    path: `${TO_PREFIX}/profile/:username`,
-    exact: false,
-    icon: 'person',
-    component: ProfileView,
-  }, {
-    label: 'Chats',
-    to: `${TO_PREFIX}/chats`,
-    exact: true,
-    icon: 'chat',
-    component: ChatView,
-    badgeContent: 2,
-  }, {
-    label: 'Notifications',
-    to: `${TO_PREFIX}/notifications`,
-    exact: true,
-    icon: 'notifications',
-    component: NotificationView,
-    badgeContent: 4,
-  }, {
-    label: 'Settings',
-    to: `${TO_PREFIX}/settings`,
-    exact: true,
-    icon: 'settings',
-    component: SettingsView,
-  },
-];
-
 class AppRouter extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       toolbarTitle: "Title",
-      data: []
+      data: [],
+      badgeChatCount: 0,
+      badgeNoticiationCount: 0,
     };
+
+    const TO_PREFIX = '';
+    
+    this.navItems = [{
+        label: 'Home',
+        to: `${TO_PREFIX}/`,
+        exact: true,
+        icon: 'home',
+        component: MainView
+      }, {
+        label: 'My profile',
+        to: `${TO_PREFIX}/profile/${activeUser.username}`,
+        path: `${TO_PREFIX}/profile/:username`,
+        exact: false,
+        icon: 'person',
+        component: ProfileView,
+      }, {
+        label: 'Chats',
+        to: `${TO_PREFIX}/chats`,
+        exact: true,
+        icon: 'chat',
+        component: ChatView,
+        badgeContent: this.state.badgeChatCount,
+      }, {
+        label: 'Notifications',
+        to: `${TO_PREFIX}/notifications`,
+        exact: true,
+        icon: 'notifications',
+        component: NotificationView,
+        badgeContent: this.state.badgeNoticiationCount,
+      }, {
+        label: 'Settings',
+        to: `${TO_PREFIX}/settings`,
+        exact: true,
+        icon: 'settings',
+        component: SettingsView,
+      },
+    ];
 
     this.setCurrentTitle = this.setCurrentTitle.bind(this);
     this.search = this.search.bind(this);
@@ -113,9 +114,9 @@ class AppRouter extends React.Component {
         toolbarActions={
           <ProfileMenu className='profile-menu' />
         }
-        navItems={navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
+        navItems={this.navItems.map(props => <NavItemLink {...props} key={props.to} />)}>
         <Switch key={location.pathname}>
-          {navItems.map(navItem => (
+          {this.navItems.map(navItem => (
             <Route
               path={navItem.path == undefined ? navItem.to : navItem.path}
               exact={navItem.exact}

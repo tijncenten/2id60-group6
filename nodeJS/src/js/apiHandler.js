@@ -82,7 +82,7 @@ export default new class {
     })
   }
 
-  async deleteFriendRequest(fk){
+  async declineFriendRequest(fk){
     await jQuery.ajax({
       method: 'DELETE',
       url: `/api/profiles/me/friends/requests/${fk}/`,
