@@ -35,13 +35,13 @@ export default class DeleteFriendDialog extends React.Component {
     const { visible } = this.state;
 
     const actions = [{
-      onClick: this.delete,
-      primary: true,
-      children: 'Yes, delete friend',
-    }, {
       onClick: this.hide,
       primary: true,
       children: 'No thanks',
+    }, {
+      onClick: this.delete,
+      primary: true,
+      children: 'Delete friend',
     }];
 
     return (

@@ -24,7 +24,7 @@ export default class FriendComponent extends React.Component {
     let avatar;
     if(profile.profilePicture === null){
       avatar = (
-        <Avatar suffix={profile.avatarColor} >{initials}</Avatar>
+        <Avatar suffix={profile.avatarColor} className="friend-list-avatar">{initials}</Avatar>
       );
     } else {
       avatar = (
