@@ -14,8 +14,8 @@ from rest_framework.reverse import reverse
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status, generics, permissions, serializers
 from .permissions import IsOwner, IsOwnerOrReadOnly, IsPostOwnerOrReadOnly, IsCommentOwnerOrReadOnly, IsMeOrReadOnly
-from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost, PostLike, CommentLike, Comment
-from .serializers import ProfileSerializer, ProfileDetailSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer, CommentLikeSerializer, CommentSerializer
+from .models import Profile, FriendRequest, Friendship, Post, NewPost, SharedPost, PostLike, CommentLike, Comment, Chat, ChatMessage
+from .serializers import ProfileSerializer, ProfileDetailSerializer, FriendSerializer, FriendRequestSerializer, PostSerializer, NewPostSerializer, NewPostCreateSerializer, SharedPostSerializer, PostLikeSerializer, CommentLikeSerializer, CommentSerializer, ChatSerializer, ChatMessageSerializer
 from .forms import SignUpForm
 
 # Create your views here.
@@ -321,3 +321,45 @@ class CommentLikeList(generics.ListAPIView):
         if comment.remove_like(self.request.user.profile):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ChatList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ChatSerializer
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        return profile.get_chats()
+
+class ChatDetail(generics.RetrieveAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ChatSerializer
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        return profile.get_chats()
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {}
+        pId = int(self.kwargs['pk'])
+        filter['id'] = pId
+        if pId == self.request.user.profile.id:
+            raise serializers.ValidationError({'detail': 'Not found.'})
+        other = get_object_or_404(Profile.objects.all(), **filter)
+        obj = queryset.filter(Q(fromProfile=other) | Q(toProfile=other)).first()
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+class ChatMessageList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ChatMessageSerializer
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        filter = {}
+        pId = int(self.kwargs['pk'])
+        filter['id'] = pId
+        other = get_object_or_404(Profile.objects.all(), **filter)
+        chat = profile.get_chats().filter(Q(fromProfile=other) | Q(toProfile=other)).first()
+        return ChatMessage.objects.filter(chat=chat)
