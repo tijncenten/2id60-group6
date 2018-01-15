@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Avatar, Card, Button } from 'react-md';
 import { NavLink } from 'react-router-dom';
 import apiHandler from '../../../js/apiHandler';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 export default class FeedComponent extends React.Component {
   constructor(props) {
@@ -24,9 +25,20 @@ export default class FeedComponent extends React.Component {
     const { data } = this.props;
     const initials = data.firstName[0] + data.lastName[0];
 
+    let avatar;
+    if(data.profilePicture === null){
+      avatar = (
+        <Avatar suffix={data.avatarColor} className="notification-avatar">{initials}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar className="notification-avatar" src={profilePictureParser.parseSmall(data.profilePicture)}/>
+      );
+    }
+
     return (
       <Card className="md-block-centered notification-feed-component">
-        <NavLink to={`/profile/${data.username}`}><Avatar suffix={data.avatarColor} className="notification-avatar">{initials}</Avatar></NavLink>
+        <NavLink to={`/profile/${data.username}`}>{avatar}</NavLink>
         <div className="notification-text">
           <span>
             <NavLink className="link-styling" to={`/profile/${data.username}`}>

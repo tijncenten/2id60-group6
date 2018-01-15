@@ -56,6 +56,10 @@ html, body {
   font-size: 8px;
 }
 
+.comment-avatar {
+  vertical-align: top;
+}
+
 .title-toolbar {
   position: relative;
   width: 100%;
@@ -112,10 +116,26 @@ html, body {
   .md-menu-container {
     display: flex;
   }
+
+  .md-icon-separator {
+    padding-left: 0px;
+
+    span {
+      display: none;
+    }
+  }
 }
 
 @media screen and (min-width: 768px) {
   .title-toolbar .toolbar-title-text {
     display: initial;
+  }
+
+  .md-toolbar--action-right .md-icon-separator {
+    padding-left: 16px;
+
+    span {
+      display: flex;
+    }
   }
 }

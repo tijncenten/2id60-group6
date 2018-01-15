@@ -12,7 +12,6 @@ export default class MessageCreate extends React.Component {
     if(this.messageInput.value.trim() !== '') {
       this.props.createMessage(this.messageInput.value.trim());
     }
-    this.messageInput.value = '';
   }
 
   render() {

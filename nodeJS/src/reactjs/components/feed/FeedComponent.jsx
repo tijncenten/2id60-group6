@@ -7,6 +7,7 @@ import ShareDialog from './ShareDialog.jsx';
 import DeleteDialog from './DeleteDialog.jsx';
 import SharedFeedComponent from './SharedFeedComponent.jsx';
 import apiHandler from '../../../js/apiHandler';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 class FeedComponent extends React.Component {
   constructor(props) {
@@ -17,8 +18,6 @@ class FeedComponent extends React.Component {
       likes: this.props.data.likes,
       commentDialog: "unset",
     }
-
-
 
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
     this.handleCommentOpen = this.handleCommentOpen.bind(this);
@@ -80,12 +79,24 @@ class FeedComponent extends React.Component {
         <SharedFeedComponent sharedPost={sharedPost}/>
       );
     }
+
+    let avatar;
+    if(owner.profilePicture === null){
+      avatar = (
+        <Avatar suffix={owner.avatarColor}>{initials}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar src={profilePictureParser.parseThumb(owner.profilePicture)}/>
+      );
+    }
+
     return (
       <Card className="md-block-centered feed-component">
         <CardTitle
           title={title}
           subtitle={date}
-          avatar={<NavLink to={`/profile/${owner.username}`}><Avatar suffix={owner.avatarColor}>{initials}</Avatar></NavLink>}>
+          avatar={<NavLink to={`/profile/${owner.username}`}>{avatar}</NavLink>}>
         </CardTitle>
         <CardText>
           {(content !== null || content !== "") && (
@@ -102,7 +113,7 @@ class FeedComponent extends React.Component {
           <Button icon primary onClick={this.handleShareOpen}>share</Button>
           {owner.id == activeUser.id && <Button icon primary onClick={this.handleDeleteOpen}>delete</Button> }
         </CardActions>
-        <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}}/>
+        <CommentDialog ref={ (dialog) => { this.commentDialog = dialog}} post={this.props.data}/>
         <ShareDialog ref={ (dialog) => { this.shareDialog = dialog}} sharePost={this.props.sharePost} data={this.props.data}/>
         {owner.id == activeUser.id && <DeleteDialog ref={ (dialog) => { this.deleteDialog = dialog}} deletePost={this.props.deletePost} id={this.props.data.id}/> }
       </Card>

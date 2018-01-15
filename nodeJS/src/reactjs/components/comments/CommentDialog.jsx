@@ -2,6 +2,7 @@ import React from 'react';
 import { DialogContainer, Button } from 'react-md';
 import CommentCreate from './CommentCreate.jsx'
 import CommentComponent from './CommentComponent.jsx'
+import apiHandler from '../../../js/apiHandler';
 
 class CommentDialog extends React.Component {
   constructor(props){
@@ -10,15 +11,16 @@ class CommentDialog extends React.Component {
     this.state = {
       visible: false,
       comments: [
-        { id: 0, username: 'Alan', message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          date: '7-1-2018', likes: 3},
-        { id: 1, username: 'Boris', message: 'The quick brown fox jumps over the lazy dog',
-          date: '8-1-2018', likes: 17}
       ]
     };
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
+    this.downloadComments = this.downloadComments.bind(this);
+  }
+
+  componentDidMount() {
+    this.downloadComments(this.props.post.id);
   }
 
   show(){
@@ -32,45 +34,43 @@ class CommentDialog extends React.Component {
   createComment(message) {
 
     if (message != "" && message != null){
-      var d = new Date();
-      var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-
-      const newComment = { id: this.state.comments.length, username: "Anon", message, date, likes: 0 }
-      this.setState({ comments: this.state.comments.concat([newComment])});
-
-      // TODO: Send to backend
+      const createCommentCallback = (comment) => {
+        this.setState({
+          comments: this.state.comments.concat([comment])
+        });
+      };
+      apiHandler.createComment(this.props.post.id, message).then(createCommentCallback);
     }
   }
 
-  loadComments(){
-    return this.state.comments.map( comment =>
-      <CommentComponent
-        key = {comment.id}
-        username = {comment.username}
-        message = {comment.message}
-        date = {comment.date}
-        likes = {comment.likes}
-        liked = {false} />
-      // TODO determine whether the user has liked this comment
-      );
+  downloadComments(id) {
+    const commentCallback = (comments) => {
+      this.setState({
+        comments: comments
+      });
+    };
+
+    apiHandler.getComments(id).then(commentCallback);
   }
 
   render() {
     const { visible } = this.state;
-    const comments = this.loadComments();
 
     return (
       <DialogContainer
         id="simple-list-dialog"
         visible={visible}
-        title="Comment dialog"
+        title="Comments"
         onHide={this.hide}
         focusOnMount={false}
         dialogClassName="comment-dialog" >
         <Button icon onClick={this.hide} className="dialog-close-button">close</Button>
-
-        {comments}
-
+        {this.state.comments.map(comment => (
+          <CommentComponent
+            key={comment.id}
+            postId={this.props.post.id}
+            data={comment} />
+        ))}
         <CommentCreate createComment = { this.createComment.bind(this) } />
       </DialogContainer>
     );

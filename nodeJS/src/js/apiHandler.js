@@ -10,14 +10,9 @@ export default new class {
   }
 
   async setProfileInformation(bio, pictureUri = null) {
-    if(bio === null && pictureUri === null) {
-      return;
-    }
     let formData = new FormData();
     formData.append('csrfmiddlewaretoken', csrf_token);
-    if(bio !== null) {
-      formData.append('bio', bio);
-    }
+    formData.append('bio', bio.trim());
     if(pictureUri !== null) {
       formData.append('profilePicture', pictureUri);
     }
@@ -140,6 +135,26 @@ export default new class {
     return parsePost(result);
   }
 
+  async getComments(id) {
+    const result = await jQuery.ajax({
+      method: 'GET',
+      url: `/api/posts/${id}/comments`,
+    });
+    return parseComments(result);
+  }
+
+  async createComment(postId, content) {
+    const result = await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${postId}/comments`,
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+        content: content,
+      }
+    });
+    return parseComment(result);
+  }
+
   async postLike(id) {
     await jQuery.ajax({
       method: 'POST',
@@ -160,7 +175,27 @@ export default new class {
     });
   }
 
-  async postDelete(id) {
+  async commentLike(postId, commentId) {
+    await jQuery.ajax({
+      method: 'POST',
+      url: `/api/posts/${postId}/comments/${commentId}/likes`,
+      data: {
+        csrfmiddlewaretoken: csrf_token,
+      }
+    });
+  }
+
+  async commentUnlike(postId, commentId) {
+    await jQuery.ajax({
+      method: 'DELETE',
+      url: `/api/posts/${postId}/comments/${commentId}/likes`,
+      headers: {
+        "X-CSRFTOKEN": csrf_token,
+      }
+    });
+  }
+
+  async commentDelete(id) {
     await jQuery.ajax({
       method: 'DELETE',
       url: `/api/posts/${id}`,
@@ -171,7 +206,7 @@ export default new class {
   }
 
   async postShare(id, content, location) {
-    await jQuery.ajax({
+    const result = await jQuery.ajax({
       method: 'POST',
       url: `/api/posts/${id}/share`,
       headers: {
@@ -182,6 +217,7 @@ export default new class {
         location: location,
       }
     });
+    return parsePost(result);
   }
 
   async getChats() {
@@ -234,6 +270,24 @@ const parsePost = (post) => {
   }
   return post;
 };
+
+const parseComments = (comments) => {
+  return comments.map(comment => (
+    parseComment(comment)
+  ));
+}
+
+const parseComment = (comment) => {
+  if(comment.profile == 'self'){
+    comment.profile = activeUser;
+  }
+  comment.profile = parseProfile(comment.profile);
+  const date = new Date(comment.date);
+  const hours = (date.getHours() === 0) ? "00" : date.getHours();
+  const minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+  comment.date = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${hours}:${minutes}`;
+  return comment;
+}
 
 const parseProfiles = (profiles) => {
   return profiles.map(profile => (

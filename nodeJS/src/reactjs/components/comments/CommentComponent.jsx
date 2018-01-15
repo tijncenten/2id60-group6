@@ -1,6 +1,8 @@
 import React from 'react';
 import { Paper, Avatar, Button, FontIcon } from 'react-md';
 import { NavLink } from 'react-router-dom';
+import apiHandler from '../../../js/apiHandler';
+import profilePictureParser from '../../../js/utils/profilePictureParser';
 
 class CommentComponent extends React.Component {
 
@@ -8,44 +10,61 @@ class CommentComponent extends React.Component {
     super(props);
 
     this.state = {
-      liked: props.liked,
-      likes: props.likes
+      liked: props.data.liked,
+      likes: props.data.likes
     }
 
     this.handleLikeToggle = this.handleLikeToggle.bind(this);
   }
 
   handleLikeToggle() {
-
     if (this.state.liked) {
-      // Substract a like
       this.state.likes -= 1;
-      // TODO send to backend
+      apiHandler.commentUnlike(this.props.postId, this.props.data.id);
     } else {
-      // Add a like
       this.state.likes += 1;
-      // TODO: send to backend
+      apiHandler.commentLike(this.props.postId, this.props.data.id);
     }
-    // Toggle icon
+
     this.setState({
       liked: !this.state.liked
     });
   }
 
   render() {
+    const { profile, content, date } = this.props.data;
+
+    let title = (
+      <NavLink className="link-styling" to={`/profile/${profile.username}`}>
+        {profile.firstName + " " + profile.lastName}
+      </NavLink>
+    )
+
+    let avatar;
+    if(profile.profilePicture === null){
+      const initials = (profile.firstName[0] + profile.lastName[0]).toUpperCase();
+      avatar = (
+        <Avatar className="comment-avatar" suffix={profile.avatarColor}>{initials}</Avatar>
+      );
+    } else {
+      avatar = (
+        <Avatar className="comment-avatar" src={profilePictureParser.parseThumb(profile.profilePicture)}/>
+      );
+    }
+
     return (
       <div>
-        <NavLink to={`/profile/${this.props.username}`}>
-          <Avatar random className="comment-avatar">{this.props.username.substring(0,2)}</Avatar>
+        <NavLink to={`/profile/${profile.username}`}>
+          {avatar}
         </NavLink>
         <div className="md-paper md-paper--1 chat-message comment-message">
           <div>
-            <NavLink className="link-styling" to={`/profile/${this.props.username}`}>{this.props.username}</NavLink>
-            {" " + this.props.message}
+            {title}
+            {" " + content}
           </div>
           <div className="comment-info-wrapper d-flex">
             <div className="comment-date">
-              {this.props.date}
+              {date}
             </div>
             <div className="inline-block">
               <Button icon secondary swapTheming={this.state.liked} onClick={this.handleLikeToggle}>thumb_up</Button>
