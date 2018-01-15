@@ -2,26 +2,56 @@ import React from 'react';
 import { Paper, Card, CardTitle, CardText, Avatar, CardActions, Button } from 'react-md';
 import { NavLink } from 'react-router-dom'
 import EditProfileDialog from './EditProfileDialog.jsx';
+import apiHandler from '../../../js/apiHandler';
 
 export default class ProfileBanner extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      profile: this.props.profile,
-    }
-
     this.handleEditDialogOpen = this.handleEditDialogOpen.bind(this);
+    this.handleFriendButton = this.handleFriendButton.bind(this);
   }
 
   handleEditDialogOpen() {
     this.editProfileDialog.show();
   }
 
+  handleFriendButton() {
+    if(this.props.profile.relation.type === "friends"){
+      apiHandler.deleteFriend(this.props.profile.id).then(this.props.update);
+      
+    } else if (this.props.profile.relation.type === "request") {
+      if(this.props.profile.relation.requestType === "sent"){
+        // friendButtonText = "Pending" ;
+        apiHandler.deleteFriendRequest(this.props.profile.id).then(this.props.update);
+      } else if (this.props.profile.relation.requestType === "received"){
+        // friendButtonText = "Accept friend request";
+        apiHandler.acceptFriendRequest(this.props.profile.id).then(this.props.update);
+      }
+    } else {
+      apiHandler.addFriend(this.props.profile.id).then(this.props.update);
+    }
+    // sent friend request to the database
+  }
+
   render() {
-    const { profile } = this.state;
+    const { profile } = this.props;
     const fullname = `${profile.firstName} ${profile.lastName}`;
-    const friendButtonText = (profile.relation.type === "friends")? "Delete Friend" : "Add Friend";
+    let isDisabled = false;
+    let friendButtonText;
+    if(profile.relation.type === "friends"){
+      friendButtonText = "Delete Friend";
+    } else if (profile.relation.type === "request") {
+      if(profile.relation.requestType === "sent"){
+        friendButtonText = "Pending...";  
+        isDisabled = true;
+      } else if (profile.relation.requestType === "received"){
+        friendButtonText = "Accept friend request";  
+      }
+    } else {
+      friendButtonText = "Add Friend";  
+    }
+
     let actions;
     if(profile.relation.type === "self") {
       actions = (
@@ -32,7 +62,7 @@ export default class ProfileBanner extends React.Component {
     } else {
       actions = (
         <span>
-          <Button raised secondary>{friendButtonText}</Button>
+          <Button raised secondary disabled={isDisabled} onClick={this.handleFriendButton}>{friendButtonText}</Button>
           <Button raised primary>Private message</Button>
         </span>
       )

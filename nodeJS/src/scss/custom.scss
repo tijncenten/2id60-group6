@@ -87,6 +87,12 @@ html, body {
       content: "done";
       color: green;
     }
+    .search-list > li > div[requestType=received]:after {
+      content: "priority_high";
+    }
+    .search-list > li > div[requestType=sent]:after {
+      content: "send";
+    }
     .search-list > li > div[relation=none]:after {
       content: "person_add";
     }
