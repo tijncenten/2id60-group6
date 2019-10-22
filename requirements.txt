@@ -20,7 +20,7 @@ itypes==1.1.0
 Jinja2==2.10
 MarkupSafe==1.0
 msgpack-python==0.4.8
-Pillow==5.0.0
+Pillow==6.2.0
 pypiwin32==220
 pytz==2017.3
 redis==2.10.6
